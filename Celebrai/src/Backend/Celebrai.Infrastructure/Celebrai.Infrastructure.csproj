@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Celebrai.Domain\Celebrai.Domain.csproj" />
     <ProjectReference Include="..\Celebrai.Domain\Celebrai.Domain.csproj" />
   </ItemGroup>
 

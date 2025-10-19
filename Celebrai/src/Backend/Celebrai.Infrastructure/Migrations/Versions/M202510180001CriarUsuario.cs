@@ -13,13 +13,13 @@ public class M202510180001CriarUsuario : Migration
             .WithColumn("Nome").AsAnsiString(50).NotNullable()
             .WithColumn("Celular").AsAnsiString(20).Nullable()
             .WithColumn("CpfUsuario").AsFixedLengthAnsiString(11).NotNullable().Unique()
-            .WithColumn("IdExterno").AsString(30).NotNullable() // NVARCHAR
+            .WithColumn("IdExterno").AsString(30).NotNullable() 
             .WithColumn("DataNascimento").AsDate().NotNullable()
-            .WithColumn("UrlIcon").AsString(150).Nullable() // NVARCHAR
+            .WithColumn("UrlIcon").AsString(150).Nullable() 
             .WithColumn("DataCriacao").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
             .WithColumn("DataAtualizacao").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
             .WithColumn("Ativo").AsBoolean().NotNullable().WithDefaultValue(true)
-            .WithColumn("Lograduro").AsString(60).Nullable() // NVARCHAR
+            .WithColumn("Lograduro").AsString(60).Nullable() 
             .WithColumn("Numero").AsAnsiString(15).Nullable()
             .WithColumn("CEP").AsAnsiString(9).Nullable();
     }

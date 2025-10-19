@@ -6,7 +6,7 @@ public class Usuario
     public string? Celular { get; set; }
     public string CpfUsuario { get; set; } = string.Empty;
     public string IdExterno { get; set; } = string.Empty;
-    public DateTime DataNascimento { get; set; }
+    public DateOnly DataNascimento { get; set; }
     public string? UrlIcon { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }

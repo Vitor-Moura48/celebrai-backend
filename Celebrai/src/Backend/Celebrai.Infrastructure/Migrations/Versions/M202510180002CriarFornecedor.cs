@@ -16,7 +16,7 @@ public class M202510180002CriarFornecedor : Migration
             .WithColumn("DataCriacao").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
             .WithColumn("DataAtualizacao").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime)
             .WithColumn("Ativo").AsBoolean().NotNullable().WithDefaultValue(true)
-            .WithColumn("Lograduro").AsString(60).NotNullable() // NVARCHAR
+            .WithColumn("Lograduro").AsString(60).NotNullable() 
             .WithColumn("Numero").AsAnsiString(15).NotNullable()
             .WithColumn("CEP").AsAnsiString(9).NotNullable();
 

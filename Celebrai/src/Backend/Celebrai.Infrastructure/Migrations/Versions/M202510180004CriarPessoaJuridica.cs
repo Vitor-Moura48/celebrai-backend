@@ -10,7 +10,7 @@ public class M202510180004CriarPessoaJuridica : Migration
     {
         Create.Table("PessoaJuridica")
             .WithColumn("Cnpj").AsFixedLengthAnsiString(14).PrimaryKey()
-            .WithColumn("Razao_Social").AsAnsiString(50).NotNullable()
+            .WithColumn("RazaoSocial").AsAnsiString(50).NotNullable()
             .WithColumn("IdFornecedor").AsGuid().NotNullable();
 
         Create.ForeignKey("FK_PessoaJuridica_Fornecedor")

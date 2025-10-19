@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Celebrai.Domain\Celebrai.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\Celebrai.Communication\Celebrai.Communication.csproj" />
     <ProjectReference Include="..\..\Shared\Celebrai.Exceptions\Celebrai.Exceptions.csproj" />
     <ProjectReference Include="..\Celebrai.Domain\Celebrai.Domain.csproj" />
