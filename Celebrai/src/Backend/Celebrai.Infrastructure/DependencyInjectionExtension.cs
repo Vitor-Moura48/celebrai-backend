@@ -11,6 +11,7 @@ public static class DependencyInjectionExtension
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         AddDbContext(services, configuration);
+        AddRepositories(services);
         AddFluentMigrator(services, configuration);
     }
 
@@ -22,6 +23,11 @@ public static class DependencyInjectionExtension
         {
             dbContextOptions.UseSqlServer(connectionString);
         });
+    }
+
+    private static void AddRepositories(IServiceCollection services)
+    {
+
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)

@@ -6,6 +6,11 @@ public static class DependencyInjectionExtension
 {
     public static void AddAplication(this IServiceCollection services, IConfiguration configuration)
     {
+        AddUseCases(services);
+    }
+
+    private static void AddUseCases(IServiceCollection services)
+    {
 
     }
 }
