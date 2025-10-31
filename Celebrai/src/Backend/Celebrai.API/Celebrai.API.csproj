@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e82447ca-b187-48e2-864f-d200097e9c93</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Celebrai.Communication\Celebrai.Communication.csproj" />
+    <ProjectReference Include="..\..\Shared\Celebrai.Exceptions\Celebrai.Exceptions.csproj" />
+    <ProjectReference Include="..\Celebrai.Application\Celebrai.Application.csproj" />
+    <ProjectReference Include="..\Celebrai.Infrastructure\Celebrai.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
