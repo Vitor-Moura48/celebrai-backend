@@ -1,15 +1,30 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Register;
+using Celebrai.Communication.Requests.Usuario;
+using Celebrai.Communication.Responses.Usuario;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Celebrai.API.Controllers;
-[Route("api/[controller]")]
-[ApiController]
-public class UsuarioController : ControllerBase
+
+public class UsuarioController : CelebraiBaseController
 {
-    [HttpGet]
-    public string Get()
+    [HttpPost]
+    [ProducesResponseType(typeof(ResponseRegisteredUsuarioJson), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Register(
+        [FromServices] IRegisterUsuarioUseCase useCase,
+        [FromBody] RequestRegisterUsuarioJson request)
     {
-        var teste = "teste";
-        return teste;
+        var result = await useCase.Execute(request);
+
+        return Created(string.Empty, result);
+    }
+
+    [HttpGet("confirm-email")]
+    [ProducesResponseType(typeof(ResponseConfirmEmailUsuariojson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromServices] IConfirmEmailUsuarioUseCase useCase)
+    {
+        var result = await useCase.Execute(token);
+
+        return Ok(result);
     }
 }
