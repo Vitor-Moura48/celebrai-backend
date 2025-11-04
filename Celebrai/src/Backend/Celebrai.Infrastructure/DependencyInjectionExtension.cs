@@ -1,14 +1,15 @@
 ﻿using Celebrai.Domain.Repositories;
 using Celebrai.Domain.Repositories.Usuario;
-using Celebrai.Domain.Services.AuthService;
+using Celebrai.Domain.Security.Cryptography;
+using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.EmailService;
 using Celebrai.Infrastructure.DataAccess;
 using Celebrai.Infrastructure.DataAccess.Repositories;
-using Celebrai.Infrastructure.Services.AuthService;
+using Celebrai.Infrastructure.Security.Cryptography;
+using Celebrai.Infrastructure.Security.Tokens.Access.Generator;
+using Celebrai.Infrastructure.Security.Tokens.Access.Validator;
 using Celebrai.Infrastructure.Services.EmailService;
-using FirebaseAdmin;
 using FluentMigrator.Runner;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,9 @@ public static class DependencyInjectionExtension
         AddDbContext(services, configuration);
         AddRepositories(services);
         AddFluentMigrator(services, configuration);
-        AddFirebaseAuthService(services, configuration);
+        AddTokens(services, configuration);
         AddSendGridService(services, configuration);
+        AddPasswordEncrpter(services);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -60,16 +62,15 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddFirebaseAuthService(IServiceCollection services, IConfiguration configuration)
+    private static void AddTokens(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IAuthService, FirebaseAuthService>();
+        var expirationTimeMinutes = uint.Parse(configuration["Settings:Jwt:ExpirationTimeMinutes"]!);
+        var signingKey = configuration["Settings:Jwt:SigningKey"];
 
-        string credentialPath = configuration["Settings:Firebase:CredentialPath"]!;
-        FirebaseApp.Create(new AppOptions()
-        {
-            Credential = GoogleCredential.FromFile(credentialPath),
-        });
+        services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+        services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
     }
+
     private static void AddSendGridService(IServiceCollection services, IConfiguration configuration)
     {
         string fromEmail = configuration["Settings:SendGrid:FromEmail"]!;
@@ -86,5 +87,10 @@ public static class DependencyInjectionExtension
             var sendGridClient = sp.GetRequiredService<ISendGridClient>();
             return new SendGridEmailService(sendGridClient, fromEmail, fromName);
         });
+    }
+
+    private static void AddPasswordEncrpter(IServiceCollection services)
+    {
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
 }

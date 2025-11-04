@@ -1,3 +1,4 @@
+using Celebrai.API.Middlewares;
 using Celebrai.Application;
 using Celebrai.Infrastructure;
 using Celebrai.Infrastructure.Migrations;
@@ -16,7 +17,11 @@ builder.Services.AddAplication(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
