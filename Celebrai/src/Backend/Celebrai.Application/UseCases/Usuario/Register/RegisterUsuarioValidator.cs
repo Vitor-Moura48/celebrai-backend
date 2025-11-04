@@ -10,7 +10,7 @@ public class RegisterUsuarioValidator : AbstractValidator<RequestRegisterUsuario
         RuleFor(user => user.Nome).NotEmpty().WithMessage("O nome é obrigatória.");
         RuleFor(user => user.Email).NotEmpty().WithMessage("O e-mail é obrigatória.")
             .EmailAddress().WithMessage("O e-mail é inválido");
-        RuleFor(user => user.Senha).SetValidator(new PasswordValidator<RequestRegisterUsuarioJson>());
+        RuleFor(user => user.Senha).Password();
         RuleFor(user => user.DataNascimento).NotEmpty().WithMessage("Data de nascimento é obrigatória.")
             .Must(BeOver18YearsOld).WithMessage("O Usuário deve ter mais de 18 anos.");
         RuleFor(user => user.CpfUsuario)
