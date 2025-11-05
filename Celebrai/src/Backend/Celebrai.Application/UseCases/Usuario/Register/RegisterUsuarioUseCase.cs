@@ -1,13 +1,14 @@
 ﻿using Celebrai.Communication.Requests.Usuario;
-using Celebrai.Communication.Responses.Tokens;
 using Celebrai.Communication.Responses.Usuario;
 using Celebrai.Domain.Enums;
 using Celebrai.Domain.Repositories;
 using Celebrai.Domain.Repositories.Usuario;
-using Celebrai.Domain.Services.AuthService;
+using Celebrai.Domain.Security.Cryptography;
+using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.EmailService;
 using Celebrai.Exceptions.ExceptionsBase;
 using MapsterMapper;
+using Microsoft.Extensions.Configuration;
 
 namespace Celebrai.Application.UseCases.Usuario.Register;
 public class RegisterUsuarioUseCase : IRegisterUsuarioUseCase
@@ -15,58 +16,69 @@ public class RegisterUsuarioUseCase : IRegisterUsuarioUseCase
     private readonly IUsuarioReadOnlyRepository _userReadOnlyRepository;
     private readonly IUsuarioWriteOnlyRepository _userWriteOnlyRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
     private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
+    private readonly IPasswordEncripter _passwordEncripter;
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
     private readonly IMapper _mapper;
 
     public RegisterUsuarioUseCase(
         IUsuarioReadOnlyRepository userReadOnlyRepository, 
         IUsuarioWriteOnlyRepository userWriteOnlyRepository,
         IUnitOfWork unitOfWork,
-        IAuthService authService,
+        IPasswordEncripter passwordEncripter,
+        IEmailService emailService,
+        IAccessTokenGenerator accessTokenGenerator,
         IMapper mapper,
-        IEmailService emailService)
+        IConfiguration configuration)
     {
         _userReadOnlyRepository = userReadOnlyRepository;
         _userWriteOnlyRepository = userWriteOnlyRepository;
         _unitOfWork = unitOfWork;
-        _authService = authService;
-        _mapper = mapper;
+        _passwordEncripter = passwordEncripter;
         _emailService = emailService;
+        _accessTokenGenerator = accessTokenGenerator;
+        _mapper = mapper;
+        _configuration = configuration;
     }
     public async Task<ResponseRegisteredUsuarioJson> Execute(RequestRegisterUsuarioJson request)
     {
         await Validate(request);
 
-        string firebaseUid = await _authService.CreateAuthAccount(request.Email, request.Senha);
-
-        string verificationLink = await _authService.GenerateEmailVerificationLink(request.Email);
-
-        string emailBody = $"Bem-vindo, {request.Nome}!<br><br>" +
-            $"Por favor, verifique seu e-mail clicando no link abaixo (verifique também sua pasta de SPAM):<br>" +
-            $"<a href='{verificationLink}'>Verificar E-mail</a><br><br>" +
-            $"Após a verificação, você poderá acessar normalmente o sistema.";
-
-        string subject = "Verifique seu e-mail";
-
-        await _emailService.SendEmail(request.Email, subject, emailBody);
-
         var entity = _mapper.Map<Domain.Entities.Usuario>(request);
-
-        entity.IdExterno = firebaseUid;
         entity.Role = RoleUsuario.Cliente;
+        entity.Senha = _passwordEncripter.Encrypt(entity.Senha);
 
         await _userWriteOnlyRepository.Add(entity);
 
         await _unitOfWork.Commit();
 
+        var verificationToken = _accessTokenGenerator.Generate(
+            entity.IdUsuario,
+            UserTokenType.AccountVerification,
+            RoleUsuario.Cliente.ToString(),
+            customExpirationMinutes: 15
+        );
+
+        var baseUrl = _configuration["AppUrl"];
+        var confirmLink = $"{baseUrl}/usuario/confirm-email?token={Uri.EscapeDataString(verificationToken)}";
+
+        var subject = "Confirme seu e-mail - Celebrai";
+        var htmlContent = $@"
+            <h2>Confirme seu e-mail</h2>
+            <p>Olá {entity.Nome},</p>
+            <p>Obrigado por se cadastrar no Celebrai!</p>
+            <p>Clique no link abaixo para confirmar seu e-mail:</p>
+            <a href='{confirmLink}'>Confirmar e-mail</a>
+            <p>O link é válido por 15 minutos.</p>";
+
+        await _emailService.SendEmail(entity.Email, subject, htmlContent);
+
+        var token = _accessTokenGenerator.Generate(entity.IdUsuario, UserTokenType.AccessToken, RoleUsuario.Cliente.ToString());
         return new ResponseRegisteredUsuarioJson
         {
             Nome = entity.Nome,
-            Tokens = new ResponseTokenFirebaseJson
-            {
-                AccessToken = await _authService.CreateCustomToken(entity.IdExterno, entity.Role.ToString())
-            }
+            Message = "Conta criada com sucesso. Verifique seu e-mail para confirmar seu cadastro(inclusive sua caixa de SPAM)."
         };
     }
 
@@ -76,9 +88,13 @@ public class RegisterUsuarioUseCase : IRegisterUsuarioUseCase
 
         var result = await validator.ValidateAsync(request);
 
-        var emailExist = await _userReadOnlyRepository.ExistUserWithEmail(request.Email);
+        var emailExist = await _userReadOnlyRepository.ExistActiveUserWithEmail(request.Email);
         if (emailExist)
             result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O e-mail já está registrado na plataforma"));
+
+        var cpfExist = await _userReadOnlyRepository.ExistUserWithCpf(request.CpfUsuario);
+        if (cpfExist)
+            result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O CPF já está registrado na plataforma"));
 
         if (result.IsValid == false)
         {
