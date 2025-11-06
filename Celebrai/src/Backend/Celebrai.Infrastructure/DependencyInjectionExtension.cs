@@ -1,5 +1,6 @@
 ﻿using Celebrai.Domain.Repositories;
 using Celebrai.Domain.Repositories.Usuario;
+using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Security.Cryptography;
 using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.EmailService;
@@ -46,7 +47,10 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IUsuarioReadOnlyRepository, UsuarioRepository>();
         services.AddScoped<IUsuarioUpdateOnlyRepository, UsuarioRepository>();
-        services.AddScoped<IUsuarioWriteOnlyRepository, UsuarioRepository>();   
+        services.AddScoped<IUsuarioWriteOnlyRepository, UsuarioRepository>();
+        services.AddScoped<IFornecedorReadOnlyRepository, FornecedorRepository>();
+        services.AddScoped<IFornecedorUpdateOnlyRepository, FornecedorRepository>();
+        services.AddScoped<IFornecedorWriteOnlyRepository, FornecedorRepository>();
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)

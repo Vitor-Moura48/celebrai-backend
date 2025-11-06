@@ -2,6 +2,7 @@
 using Celebrai.Application.UseCases.Login.DoLogin;
 using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
 using Celebrai.Application.UseCases.Usuario.Register;
+using Celebrai.Application.UseCases.Fornecedor.Register;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterUsuarioUseCase, RegisterUsuarioUseCase>();
         services.AddScoped<IConfirmEmailUsuarioUseCase, ConfirmEmailUsuarioUseCase>();
         services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
+        services.AddScoped<IRegisterFornecedorUseCase, RegisterFornecedorUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)
