@@ -15,6 +15,8 @@ public class UsuarioRepository : IUsuarioReadOnlyRepository, IUsuarioWriteOnlyRe
 
     public async Task<bool> ExistUserWithCpf(string cpf) => await _context.Usuario.AnyAsync(user => user.CpfUsuario.Equals(cpf));
 
+    public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier) => await _context.Usuario.AnyAsync(user => user.IdUsuario.Equals(userIdentifier) && user.Ativo);
+
     public async Task<Usuario?> GetByEmail(string email)
         => await _context.Usuario.FirstOrDefaultAsync(user => user.Email.Equals(email));
 
