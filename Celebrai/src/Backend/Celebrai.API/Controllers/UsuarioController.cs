@@ -2,6 +2,7 @@
 using Celebrai.Application.UseCases.Usuario.ChangeAddress;
 using Celebrai.Application.UseCases.Usuario.ChangePassword;
 using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Profile;
 using Celebrai.Application.UseCases.Usuario.Register;
 using Celebrai.Application.UseCases.Usuario.Update;
 using Celebrai.Application.UseCases.Usuario.UpdateEmail;
@@ -84,5 +85,15 @@ public class UsuarioController : CelebraiBaseController
         await useCase.Execute(request);
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseUsuarioProfileJson), StatusCodes.Status200OK)]
+    [AuthenticatedUser(RoleUsuario.Cliente)]
+    public async Task<IActionResult> GetProfile([FromServices] IGetUsuarioProfileUseCase useCase)
+    {
+        var result = await useCase.Execute();
+
+        return Ok(result);
     }
 }
