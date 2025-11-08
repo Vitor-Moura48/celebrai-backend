@@ -3,6 +3,7 @@ using Celebrai.Application.UseCases.Login.DoLogin;
 using Celebrai.Application.UseCases.Usuario.ChangeAddress;
 using Celebrai.Application.UseCases.Usuario.ChangePassword;
 using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Delete;
 using Celebrai.Application.UseCases.Usuario.Profile;
 using Celebrai.Application.UseCases.Usuario.Register;
 using Celebrai.Application.UseCases.Usuario.Update;
@@ -30,6 +31,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IChangeAddressUsuarioUseCase, ChangeAddressUsuarioUseCase>();
         services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
         services.AddScoped<IGetUsuarioProfileUseCase, GetUsuarioProfileUseCase>();
+        services.AddScoped<IRequestDeleteUsuarioUseCase, RequestDeleteUsuarioUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)
