@@ -1,7 +1,13 @@
 ﻿using Celebrai.Application.Services.Mapster;
 using Celebrai.Application.UseCases.Login.DoLogin;
+using Celebrai.Application.UseCases.Usuario.ChangeAddress;
+using Celebrai.Application.UseCases.Usuario.ChangePassword;
 using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Delete;
+using Celebrai.Application.UseCases.Usuario.Profile;
 using Celebrai.Application.UseCases.Usuario.Register;
+using Celebrai.Application.UseCases.Usuario.Update;
+using Celebrai.Application.UseCases.Usuario.UpdateEmail;
 using Celebrai.Application.UseCases.Fornecedor.Register;
 using Mapster;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +27,12 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterUsuarioUseCase, RegisterUsuarioUseCase>();
         services.AddScoped<IConfirmEmailUsuarioUseCase, ConfirmEmailUsuarioUseCase>();
         services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
+        services.AddScoped<IUpdateUsuarioUseCase, UpdateUsuarioUseCase>();
+        services.AddScoped<IUpdateEmailUsuarioUseCase, UpdateEmailUsuarioUseCase>();
+        services.AddScoped<IChangeAddressUsuarioUseCase, ChangeAddressUsuarioUseCase>();
+        services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
+        services.AddScoped<IGetUsuarioProfileUseCase, GetUsuarioProfileUseCase>();
+        services.AddScoped<IRequestDeleteUsuarioUseCase, RequestDeleteUsuarioUseCase>();
         services.AddScoped<IRegisterFornecedorUseCase, RegisterFornecedorUseCase>();
     }
 

@@ -20,5 +20,6 @@ public class MapsterConfig : IRegister
     private void DomainToResponse(TypeAdapterConfig config)
     {
         config.NewConfig<ResponseRegisteredUsuarioJson, Usuario>();
+        config.NewConfig<ResponseUsuarioProfileJson, Usuario>();
     }
 }

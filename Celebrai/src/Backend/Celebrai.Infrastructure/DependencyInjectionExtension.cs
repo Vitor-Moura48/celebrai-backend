@@ -4,12 +4,14 @@ using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Security.Cryptography;
 using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.EmailService;
+using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Infrastructure.DataAccess;
 using Celebrai.Infrastructure.DataAccess.Repositories;
 using Celebrai.Infrastructure.Security.Cryptography;
 using Celebrai.Infrastructure.Security.Tokens.Access.Generator;
 using Celebrai.Infrastructure.Security.Tokens.Access.Validator;
 using Celebrai.Infrastructure.Services.EmailService;
+using Celebrai.Infrastructure.Services.LoggedUser;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,7 @@ public static class DependencyInjectionExtension
         AddTokens(services, configuration);
         AddSendGridService(services, configuration);
         AddPasswordEncrpter(services);
+        AddLoggedUser(services);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -97,4 +100,6 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
+
+    private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
 }
