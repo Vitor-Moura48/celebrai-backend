@@ -2,6 +2,7 @@
 using Celebrai.Application.UseCases.Usuario.ChangeAddress;
 using Celebrai.Application.UseCases.Usuario.ChangePassword;
 using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Delete;
 using Celebrai.Application.UseCases.Usuario.Profile;
 using Celebrai.Application.UseCases.Usuario.Register;
 using Celebrai.Application.UseCases.Usuario.Update;
@@ -95,5 +96,15 @@ public class UsuarioController : CelebraiBaseController
         var result = await useCase.Execute();
 
         return Ok(result);
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [AuthenticatedUser(RoleUsuario.Cliente)]
+    public async Task<IActionResult> Delete([FromServices] IRequestDeleteUsuarioUseCase useCase)
+    {
+        await useCase.Execute();
+
+        return NoContent();
     }
 }
