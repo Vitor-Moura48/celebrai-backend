@@ -7,6 +7,7 @@ using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Security.Cryptography;
 using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.EmailService;
+using Celebrai.Domain.Services.LoggedUser;
 
 using Celebrai.Exceptions.ExceptionsBase;
 
@@ -25,15 +26,18 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
     private readonly IAccessTokenGenerator _accessTokenGenerator;
     private readonly IMapper _mapper;
 
+    private readonly ILoggedUser _loggedUser;
+
     public RegisterFornecedorUseCase(
-        IFornecedorReadOnlyRepository fornecedorReadOnlyRepository, 
+        IFornecedorReadOnlyRepository fornecedorReadOnlyRepository,
         IFornecedorWriteOnlyRepository fornecedorWriteOnlyRepository,
         IUnitOfWork unitOfWork,
         IPasswordEncripter passwordEncripter,
         IEmailService emailService,
         IAccessTokenGenerator accessTokenGenerator,
         IMapper mapper,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILoggedUser loggedUser)
     {
         _fornecedorReadOnlyRepository = fornecedorReadOnlyRepository;
         _fornecedorWriteOnlyRepository = fornecedorWriteOnlyRepository;
@@ -43,50 +47,48 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
         _accessTokenGenerator = accessTokenGenerator;
         _mapper = mapper;
         _configuration = configuration;
+        _loggedUser = loggedUser;
     }
     public async Task<ResponseRegisteredFornecedorJson> Execute(RequestRegisterFornecedorJson request)
     {
+
         await Validate(request);
 
         var entity = _mapper.Map<Domain.Entities.Fornecedor>(request);
 
-        Console.WriteLine("---------------");
-        Console.WriteLine(entity.Usuario == null ? entity : entity.Usuario.ToString());
-        Console.WriteLine("---------------");
-
+        var loggedUser = await _loggedUser.User();
+        entity.IdUsuario = loggedUser.IdUsuario;
+        entity.Usuario = loggedUser;
         entity.Usuario.Role = RoleUsuario.Fornecedor;
-        entity.Usuario.Senha = _passwordEncripter.Encrypt(entity.Usuario.Senha);
 
         await _fornecedorWriteOnlyRepository.Add(entity);
+        await _unitOfWork.Commit();
+
+        if (request.TipoFornecedor == "PF")
+        {
+            var pfEntity = _mapper.Map<Domain.Entities.PessoaFisica>(request);
+            pfEntity.IdFornecedor = entity.IdFornecedor;
+            pfEntity.NomeCompleto = request.NomeCompleto!;
+            pfEntity.Cpf = request.CPF!;
+
+            await _fornecedorWriteOnlyRepository.AddPessoaFisica(pfEntity);
+        }
+        else if (request.TipoFornecedor == "PJ")
+        {
+            var pjEntity = _mapper.Map<Domain.Entities.PessoaJuridica>(request);
+            pjEntity.IdFornecedor = entity.IdFornecedor;
+            pjEntity.RazaoSocial = request.RazaoSocial!;
+            pjEntity.Cnpj = request.CNPJ!;
+
+            await _fornecedorWriteOnlyRepository.AddPessoaJuridica(pjEntity);
+        }
 
         await _unitOfWork.Commit();
 
-        var verificationToken = _accessTokenGenerator.Generate(
-            entity.IdFornecedor,
-            UserTokenType.AccountVerification,
-            RoleUsuario.Fornecedor.ToString(),
-            customExpirationMinutes: 15
-        );
-
-        var baseUrl = _configuration["AppUrl"];
-        var confirmLink = $"{baseUrl}/fornecedor/confirm-email?token={Uri.EscapeDataString(verificationToken)}";
-
-        var subject = "Confirme seu e-mail - Celebrai";
-        var htmlContent = $@"
-            <h2>Confirme seu e-mail</h2>
-            <p>Olá {entity.Usuario.Nome},</p>
-            <p>Obrigado por se cadastrar no Celebrai!</p>
-            <p>Clique no link abaixo para confirmar seu e-mail:</p>
-            <a href='{confirmLink}'>Confirmar e-mail</a>
-            <p>O link é válido por 15 minutos.</p>";
-
-        await _emailService.SendEmail(entity.Usuario.Email, subject, htmlContent);
-
-        var token = _accessTokenGenerator.Generate(entity.IdFornecedor, UserTokenType.AccessToken, RoleUsuario.Fornecedor.ToString());
         return new ResponseRegisteredFornecedorJson
         {
             Nome = entity.Usuario.Nome,
-            Message = "Conta criada com sucesso. Verifique seu e-mail para confirmar seu cadastro(inclusive sua caixa de SPAM)."
+            Message = "Conta Fornecedor criada com sucesso."
         };
     }
 
@@ -96,9 +98,18 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
 
         var result = await validator.ValidateAsync(request);
 
-        var emailExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithEmail(request.Email);
-        if (emailExist)
-            result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O e-mail já está registrado na plataforma"));
+        if (request.TipoFornecedor == "PF")
+        {
+            var cpfExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithCPF(request.CPF!);
+            if (cpfExist)
+                result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O CPF já está registrado na plataforma"));
+        }
+        else if (request.TipoFornecedor == "PJ")
+        {
+            var cnpjExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithCNPJ(request.CNPJ!);
+            if (cnpjExist)
+                result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O CNPJ já está registrado na plataforma"));
+        }
 
         if (result.IsValid == false)
         {

@@ -9,9 +9,23 @@ public class FornecedorRepository : IFornecedorReadOnlyRepository, IFornecedorWr
 
     public FornecedorRepository(CelebraiDbContext context) => _context = context;
 
-    public async Task Add(Fornecedor fornecedor) => await _context.Fornecedor.AddAsync(fornecedor);
+    public async Task Add(Fornecedor fornecedor)
+    {
+        _context.Attach(fornecedor.Usuario);
+        await _context.Fornecedor.AddAsync(fornecedor);
+    }
 
-    public async Task<bool> ExistActiveFornecedorWithEmail(string email) => await _context.Fornecedor.AnyAsync(fornecedor => fornecedor.Usuario.Email.Equals(email) && fornecedor.Ativo);
+    public async Task AddPessoaFisica(PessoaFisica pessoaFisica)
+    {
+        await _context.PessoaFisica.AddAsync(pessoaFisica);
+    }
+    public async Task AddPessoaJuridica(PessoaJuridica pessoaJuridica)
+    {
+        await _context.PessoaJuridica.AddAsync(pessoaJuridica);
+    }
+
+    public async Task<bool> ExistActiveFornecedorWithCPF(string cpf) => await _context.PessoaFisica.AnyAsync(pf => pf.Cpf.Equals(cpf) && pf.Fornecedor.Ativo);
+    public async Task<bool> ExistActiveFornecedorWithCNPJ(string cnpj) => await _context.PessoaJuridica.AnyAsync(pj => pj.Cnpj.Equals(cnpj) && pj.Fornecedor.Ativo);
 
     public async Task<Fornecedor?> GetByEmail(string email)
         => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.Usuario.Email.Equals(email));
