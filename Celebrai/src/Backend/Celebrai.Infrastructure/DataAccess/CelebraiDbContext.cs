@@ -13,7 +13,8 @@ public class CelebraiDbContext : DbContext
     public DbSet<Pedido> Pedido { get; set; }
     public DbSet<PedidoProduto> PedidoProduto { get; set; }
     public DbSet<Produto> Produto { get; set; }
-    public DbSet<Material> Material { get; set; }
+    public DbSet<Kit> Kit { get; set; }
+    public DbSet<ProdutoKit> ProdutoKit { get; set; }
     public DbSet<Servico> Servico { get; set; }
     public DbSet<FornecedorProduto> FornecedorProduto { get; set; }
     public DbSet<Categoria> Categoria { get; set; }

@@ -11,12 +11,10 @@ public class ProdutoMap : BaseMap<Produto>
     {
         base.Configure(builder);
 
-        // Chave Primária (PK) com Identity (seed 1000, increment 10)
         builder.HasKey(x => x.IdProduto);
         builder.Property(x => x.IdProduto).UseIdentityColumn(1000, 10);
 
-        // Chave Estrangeira (FK)
-        builder.HasOne(x => x.SubCategoria) // Assumindo propriedade de navegação
+        builder.HasOne(x => x.SubCategoria) 
                .WithMany()
                .HasForeignKey(x => x.IdSubcategoria)
                .HasConstraintName("FK_Produto_Subcategoria");
