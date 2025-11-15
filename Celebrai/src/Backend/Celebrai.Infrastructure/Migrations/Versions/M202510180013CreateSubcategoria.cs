@@ -10,7 +10,7 @@ public class M202510180013CreateSubCategoria : Migration
     public override void Up()
     {
         Create.Table("SubCategoria")
-            .WithColumn("IdSubCategoria").AsInt32().PrimaryKey().Identity()
+            .WithColumn("IdSubCategoria").AsInt32().PrimaryKey()
             .WithColumn("IdCategoria").AsInt32().NotNullable()
             .WithColumn("Nome").AsAnsiString(20).NotNullable();
 
