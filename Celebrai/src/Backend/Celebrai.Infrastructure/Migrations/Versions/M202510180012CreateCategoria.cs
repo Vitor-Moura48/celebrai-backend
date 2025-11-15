@@ -9,7 +9,7 @@ public class M202510180012CreateCategoria : Migration
     public override void Up()
     {
         Create.Table("Categoria")
-            .WithColumn("IdCategoria").AsInt32().PrimaryKey().Identity()
+            .WithColumn("IdCategoria").AsInt32().PrimaryKey()
             .WithColumn("Nome").AsAnsiString(20).NotNullable();
     }
 
