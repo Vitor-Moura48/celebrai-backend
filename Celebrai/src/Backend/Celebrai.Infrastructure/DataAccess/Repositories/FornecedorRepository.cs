@@ -30,7 +30,7 @@ public class FornecedorRepository : IFornecedorReadOnlyRepository, IFornecedorWr
     public async Task<Fornecedor?> GetByEmail(string email)
         => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.Usuario.Email.Equals(email));
 
-    public async Task<Fornecedor?> GetById(Guid fornecedorIdentifier) => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.IdFornecedor == fornecedorIdentifier);
+    public async Task<Fornecedor?> GetById(Guid fornecedorIdentifier) => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.IdUsuario == fornecedorIdentifier);
 
     public void Update(Fornecedor fornecedor) => _context.Fornecedor.Update(fornecedor);
 }
