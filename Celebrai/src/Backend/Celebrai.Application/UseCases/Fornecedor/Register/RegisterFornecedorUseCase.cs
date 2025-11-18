@@ -4,6 +4,7 @@ using Celebrai.Communication.Responses.Tokens;
 using Celebrai.Domain.Enums;
 using Celebrai.Domain.Repositories;
 using Celebrai.Domain.Repositories.Fornecedor;
+using Celebrai.Domain.Repositories.Usuario;
 using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Exceptions.ExceptionsBase;
@@ -14,6 +15,7 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
 {
     private readonly IFornecedorReadOnlyRepository _fornecedorReadOnlyRepository;
     private readonly IFornecedorWriteOnlyRepository _fornecedorWriteOnlyRepository;
+    private readonly IUsuarioUpdateOnlyRepository _userUpdateOnlyRepository;
     private readonly IAccessTokenGenerator _accessTokenGenerator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -22,6 +24,7 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
     public RegisterFornecedorUseCase(
         IFornecedorReadOnlyRepository fornecedorReadOnlyRepository,
         IFornecedorWriteOnlyRepository fornecedorWriteOnlyRepository,
+        IUsuarioUpdateOnlyRepository userUpdateOnlyRepository,
         IUnitOfWork unitOfWork,
         IAccessTokenGenerator accessTokenGenerator,
         IMapper mapper,
@@ -29,6 +32,7 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
     {
         _fornecedorReadOnlyRepository = fornecedorReadOnlyRepository;
         _fornecedorWriteOnlyRepository = fornecedorWriteOnlyRepository;
+        _userUpdateOnlyRepository = userUpdateOnlyRepository;
         _unitOfWork = unitOfWork;
         _accessTokenGenerator = accessTokenGenerator;
         _mapper = mapper;
@@ -36,17 +40,18 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
     }
     public async Task<ResponseRegisteredFornecedorJson> Execute(RequestRegisterFornecedorJson request)
     {
-        await Validate(request);
+        var loggedUser = await _loggedUser.User();
+        await Validate(request, loggedUser);
+
+        var user = await _userUpdateOnlyRepository.GetById(loggedUser.IdUsuario);
 
         var entity = _mapper.Map<Domain.Entities.Fornecedor>(request);
 
-        var loggedUser = await _loggedUser.User();
-        entity.IdUsuario = loggedUser.IdUsuario;
-        entity.Usuario = loggedUser;
-        entity.Usuario.Role = RoleUsuario.Fornecedor;
+        entity.IdUsuario = user!.IdUsuario;
+        user.Role = RoleUsuario.Fornecedor;
 
+        entity.Usuario = user;
         await _fornecedorWriteOnlyRepository.Add(entity);
-        await _unitOfWork.Commit();
 
         if (request.TipoFornecedor == "PF")
         {
@@ -82,11 +87,16 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
         };
     }
 
-    private async Task Validate(RequestRegisterFornecedorJson request)
+    private async Task Validate(RequestRegisterFornecedorJson request, Domain.Entities.Usuario loggedUser)
     {
         var validator = new RegisterFornecedorValidator();
 
         var result = await validator.ValidateAsync(request);
+
+        var userExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithIdentifier(loggedUser.IdUsuario);
+
+        if (userExist)
+            result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O Usuário já está com conta de fornecedor na plataforma"));
 
         if (request.TipoFornecedor == "PF")
         {

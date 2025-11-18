@@ -15,6 +15,7 @@ public class FornecedorRepository : IFornecedorReadOnlyRepository, IFornecedorWr
         await _context.Fornecedor.AddAsync(fornecedor);
     }
 
+    public async Task<bool> ExistActiveFornecedorWithIdentifier(Guid fornecedorIdentifier) => await _context.Fornecedor.AnyAsync(user => user.IdUsuario.Equals(fornecedorIdentifier) && user.Ativo);
     public async Task AddPessoaFisica(PessoaFisica pessoaFisica)
     {
         await _context.PessoaFisica.AddAsync(pessoaFisica);
