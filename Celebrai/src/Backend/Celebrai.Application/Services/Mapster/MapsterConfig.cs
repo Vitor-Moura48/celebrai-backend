@@ -1,4 +1,5 @@
-﻿using Celebrai.Communication.Requests.Usuario;
+﻿using Celebrai.Communication.Requests.Produto;
+using Celebrai.Communication.Requests.Usuario;
 using Celebrai.Communication.Responses.Usuario;
 using Celebrai.Domain.Entities;
 using Mapster;
@@ -15,6 +16,8 @@ public class MapsterConfig : IRegister
     private void RequestToDomain(TypeAdapterConfig config)
     {
         config.NewConfig<RequestRegisterUsuarioJson, Usuario>();
+
+        config.NewConfig<RequestRegisterProdutoFormData, Produto>();
     }
 
     private void DomainToResponse(TypeAdapterConfig config)
