@@ -1,8 +1,11 @@
 ﻿using Celebrai.Domain.Repositories;
-using Celebrai.Domain.Repositories.Usuario;
 using Celebrai.Domain.Repositories.Fornecedor;
+using Celebrai.Domain.Repositories.Produto;
+using Celebrai.Domain.Repositories.SubCategoria;
+using Celebrai.Domain.Repositories.Usuario;
 using Celebrai.Domain.Security.Cryptography;
 using Celebrai.Domain.Security.Tokens;
+using Celebrai.Domain.Services.Cloudinary;
 using Celebrai.Domain.Services.EmailService;
 using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Infrastructure.DataAccess;
@@ -10,8 +13,10 @@ using Celebrai.Infrastructure.DataAccess.Repositories;
 using Celebrai.Infrastructure.Security.Cryptography;
 using Celebrai.Infrastructure.Security.Tokens.Access.Generator;
 using Celebrai.Infrastructure.Security.Tokens.Access.Validator;
+using Celebrai.Infrastructure.Services.Cloudinary;
 using Celebrai.Infrastructure.Services.EmailService;
 using Celebrai.Infrastructure.Services.LoggedUser;
+using CloudinaryDotNet;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +37,7 @@ public static class DependencyInjectionExtension
         AddSendGridService(services, configuration);
         AddPasswordEncrpter(services);
         AddLoggedUser(services);
+        AddCloudinary(services, configuration);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -54,6 +60,9 @@ public static class DependencyInjectionExtension
         services.AddScoped<IFornecedorReadOnlyRepository, FornecedorRepository>();
         services.AddScoped<IFornecedorUpdateOnlyRepository, FornecedorRepository>();
         services.AddScoped<IFornecedorWriteOnlyRepository, FornecedorRepository>();
+        services.AddScoped<ISubCategoriaReadOnlyRepository, SubCategoriaRepository>();
+        services.AddScoped<IProdutoWriteOnlyRepository, ProdutoRepository>();
+
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)
@@ -102,4 +111,23 @@ public static class DependencyInjectionExtension
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
+
+    private static void AddCloudinary(IServiceCollection services, IConfiguration configuration)
+    {
+        var cloudinarySettings = configuration
+            .GetSection("Settings:Cloudinary");
+
+        services.AddSingleton(cloudinarySettings);
+
+        services.AddSingleton(provider =>
+        {
+            var account = new Account(
+                configuration["Settings:Cloudinary:CloudName"],
+                configuration["Settings:Cloudinary:ApiKey"],
+                configuration["Settings:Cloudinary:ApiSecret"]);
+            return new Cloudinary(account);
+        });
+
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+    }
 }

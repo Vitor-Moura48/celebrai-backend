@@ -34,7 +34,7 @@ public class DoLoginUseCase : IDoLoginUseCase
         if (user is null || _passwordEncripter.IsValid(request.Password, user.Senha) == false)
             throw new InvalidLoginException();
 
-        var token = _accessTokenGenerator.Generate(user.IdUsuario, UserTokenType.AccessToken, RoleUsuario.Cliente.ToString());
+        var token = _accessTokenGenerator.Generate(user.IdUsuario, UserTokenType.AccessToken, user.Role.ToString());
         return new ResponseLoginUsuarioJson
         {
             Name = user.Nome,
