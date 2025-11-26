@@ -3,4 +3,6 @@ public class Kit
 {
     public int IdKit { get; set; }
     public bool VendaIndividual { get; set; } = false;
+    public decimal KitPreco { get; set; }
+
 }
