@@ -2,9 +2,9 @@
 
 namespace Celebrai.Infrastructure.Migrations.Versions;
 
-[Migration(202511260001, "Adição da Coluna PrecoUnitario")]
+[Migration(202511260002, "Adição da Coluna PrecoUnitario")]
 [Profile("Celebrai")]
-public class M202511260001AdicionarColunaPrecoUnitario : Migration
+public class M202511260002AdicionarColunaPrecoUnitario : Migration
 {
     public override void Up()
     {

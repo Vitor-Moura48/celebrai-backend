@@ -2,9 +2,9 @@ using FluentMigrator;
 
 namespace Celebrai.Infrastructure.Migrations.Versions;
 
-[Migration(202511260001, "Retirar Coluna Fornecedor da Tabela Pedido")]
+[Migration(202511260004, "Retirar Coluna Fornecedor da Tabela Pedido")]
 [Profile("Celebrai")]
-public class M202511260001RetirarColunaFornecedorDaTabelaPedido : ForwardOnlyMigration
+public class M202511260004RetirarColunaFornecedorDaTabelaPedido : ForwardOnlyMigration
 {
     public override void Up()
     {

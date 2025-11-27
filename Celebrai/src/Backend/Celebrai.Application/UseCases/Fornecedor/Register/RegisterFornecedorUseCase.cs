@@ -98,13 +98,13 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
         if (userExist)
             result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O Usuário já está com conta de fornecedor na plataforma"));
 
-        if (request.TipoFornecedor == "PF")
+        if (request.TipoFornecedor.Equals("PF"))
         {
             var cpfExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithCPF(request.CPF!);
             if (cpfExist)
                 result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O CPF já está registrado na plataforma"));
         }
-        else if (request.TipoFornecedor == "PJ")
+        else if (request.TipoFornecedor.Equals("PJ"))
         {
             var cnpjExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithCNPJ(request.CNPJ!);
             if (cnpjExist)
