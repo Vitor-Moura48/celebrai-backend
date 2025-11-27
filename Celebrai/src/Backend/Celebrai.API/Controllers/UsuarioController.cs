@@ -90,7 +90,7 @@ public class UsuarioController : CelebraiBaseController
 
     [HttpGet]
     [ProducesResponseType(typeof(ResponseUsuarioProfileJson), StatusCodes.Status200OK)]
-    [AuthenticatedUser(RoleUsuario.Cliente)]
+    [AuthenticatedUser(RoleUsuario.Cliente, RoleUsuario.Fornecedor)]
     public async Task<IActionResult> GetProfile([FromServices] IGetUsuarioProfileUseCase useCase)
     {
         var result = await useCase.Execute();

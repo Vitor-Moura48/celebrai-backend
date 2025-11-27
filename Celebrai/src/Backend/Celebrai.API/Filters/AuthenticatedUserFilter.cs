@@ -15,16 +15,16 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
 {
     private readonly IAccessTokenValidator _accessTokenValidator;
     private readonly IUsuarioReadOnlyRepository _repository;
-    private readonly RoleUsuario? _roleEsperado;
+    private readonly RoleUsuario[] _allowedRoles;
 
     public AuthenticatedUserFilter(
         IAccessTokenValidator accessTokenValidator,
         IUsuarioReadOnlyRepository repository,
-        RoleUsuario? roleEsperado = null)
+        params RoleUsuario[] allowedRoles)
     {
         _accessTokenValidator = accessTokenValidator;
         _repository = repository;
-        _roleEsperado = roleEsperado;
+        _allowedRoles = allowedRoles ?? Array.Empty<RoleUsuario>();
     }
 
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
@@ -42,8 +42,19 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
             var roleClaim = jwtToken.Claims.FirstOrDefault(c =>
                 c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
 
-            if (_roleEsperado.HasValue && roleClaim != _roleEsperado.Value.ToString())
-                throw new UnauthorizedException($"Usuário precisa ser {_roleEsperado.Value} para acessar este recurso.");
+            if (_allowedRoles.Length > 0)
+            {
+                var match = false;
+                if (string.IsNullOrWhiteSpace(roleClaim) == false)
+                {
+                    match = _allowedRoles.Any(r =>
+                        string.Equals(r.ToString(), roleClaim, StringComparison.OrdinalIgnoreCase)
+                        || (int.TryParse(roleClaim, out var numeric) && (int)r == numeric));
+                }
+
+                if (match == false)
+                    throw new UnauthorizedException($"Usuário precisa de permissão nesta rota.");
+            }
 
             var exists = await _repository.ExistActiveUserWithIdentifier(userId);
             if (exists == false)

@@ -7,8 +7,8 @@ namespace Celebrai.API.Attributes;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthenticatedUserAttribute : TypeFilterAttribute
 {
-    public AuthenticatedUserAttribute(RoleUsuario role) : base(typeof(AuthenticatedUserFilter))
+    public AuthenticatedUserAttribute(params RoleUsuario[] allowedRoles) : base(typeof(AuthenticatedUserFilter))
     {
-        Arguments = new object[] { role };
+        Arguments = new object[] { allowedRoles ?? Array.Empty<RoleUsuario>() };
     }
 }
