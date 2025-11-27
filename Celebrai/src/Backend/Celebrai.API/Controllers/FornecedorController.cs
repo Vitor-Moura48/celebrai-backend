@@ -1,6 +1,7 @@
 ﻿using Celebrai.API.Attributes;
 using Celebrai.Application.UseCases.Fornecedor.Register;
 using Celebrai.Application.UseCases.Fornecedor.Delete;
+using Celebrai.Application.UseCases.Fornecedor.Update;
 using Celebrai.Communication.Requests.Fornecedor;
 using Celebrai.Communication.Responses;
 using Celebrai.Communication.Responses.Fornecedor;
@@ -31,6 +32,19 @@ public class FornecedorController : CelebraiBaseController
     {
         await useCase.Execute();
 
-        return NoContent();
+        return Ok(new ResponseDeletedFornecedorJson { Message = "Fornecedor Desativado com sucesso." });
+    }
+
+    [HttpPut]
+    [ProducesResponseType(typeof(ResponseUpdateFornecedorJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [AuthenticatedUser(RoleUsuario.Fornecedor)]
+    public async Task<IActionResult> Update(
+        [FromServices] IUpdateFornecedorUseCase useCase,
+        [FromBody] RequestUpdateFornecedorJson request)
+    {
+        await useCase.Execute(request);
+
+        return Ok(new ResponseUpdateFornecedorJson { Message = "Fornecedor atualizado com sucesso." });
     }
 }
