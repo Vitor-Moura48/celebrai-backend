@@ -9,6 +9,7 @@ public class Produto
     public string Descricao { get; set; } = string.Empty;
     public string ImagemUrl { get; set; } = string.Empty;
     public string ImagemPublicId { get; set; } = string.Empty;
+    public int QuantidadeAluguelPorDia { get; set; } = 1;
 
     public SubCategoria SubCategoria { get; set; } = default!;
 }
