@@ -8,8 +8,11 @@ public class M202511260002AdicionarColunaPrecoUnitario : Migration
 {
     public override void Up()
     {
-        Alter.Table("Produto")
-            .AddColumn("PrecoUnitario").AsCurrency().NotNullable();
+        if (Schema.Table("Produto").Column("PrecoUnitario").Exists() == false)
+        {
+            Alter.Table("Produto")
+                .AddColumn("PrecoUnitario").AsCurrency().NotNullable();
+        }
     }
 
     public override void Down()
