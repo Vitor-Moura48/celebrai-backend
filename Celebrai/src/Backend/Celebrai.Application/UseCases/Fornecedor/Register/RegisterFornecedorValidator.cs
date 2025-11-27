@@ -22,6 +22,7 @@ public class RegisterFornecedorValidator : AbstractValidator<RequestRegisterForn
             .NotEmpty().WithMessage("O CPF é obrigatório para Pessoa Física.")
             .Length(11).WithMessage("O CPF deve conter 11 caracteres.")
             .Matches("^[0-9]*$").WithMessage("O CPF deve conter apenas números.")
+            .Must((fornecedor, cpf) => ValidaCpf(cpf)).WithMessage("CPF inválido.")
             .When(f => f.TipoFornecedor == "PF");
 
         RuleFor(fornecedor => fornecedor.NomeCompleto)
@@ -37,5 +38,36 @@ public class RegisterFornecedorValidator : AbstractValidator<RequestRegisterForn
         RuleFor(fornecedor => fornecedor.RazaoSocial)
             .NotEmpty().WithMessage("A Razão Social é obrigatória para Pessoa Jurídica.")
             .When(f => f.TipoFornecedor == "PJ");
+    }
+
+
+    private bool ValidaCpf(string cpf)
+    {
+        if (string.IsNullOrEmpty(cpf) || cpf.Length != 11) return false;
+        
+        cpf = new string(cpf.Where(char.IsDigit).ToArray());
+
+        var digits = cpf.Select(c => c - '0').ToArray();
+
+        for (int checkPos = 9; checkPos < 11; checkPos++)
+        {
+            int sum = 0;
+            for (int i = 0; i < checkPos; i++)
+                sum += digits[i] * (checkPos + 1 - i);
+
+            int calculatedDigit = sum * 10 % 11;
+
+            if (calculatedDigit == 10) 
+            {
+                calculatedDigit = 0;
+            }
+
+            if (calculatedDigit != digits[checkPos])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

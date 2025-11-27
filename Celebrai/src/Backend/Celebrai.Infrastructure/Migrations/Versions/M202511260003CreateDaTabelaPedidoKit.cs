@@ -2,9 +2,9 @@ using FluentMigrator;
 
 namespace Celebrai.Infrastructure.Migrations.Versions;
 
-[Migration(202511260001, "Criação da Tabela PedidoKit")]
+[Migration(202511260003, "Criação da Tabela PedidoKit")]
 [Profile("Celebrai")]
-public class M202511260001CreateDaTabelaPedidoKit : Migration
+public class M202511260003CreateDaTabelaPedidoKit : Migration
 {
     public override void Up()
     {
