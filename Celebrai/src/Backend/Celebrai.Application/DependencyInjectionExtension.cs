@@ -1,5 +1,6 @@
 ﻿using Celebrai.Application.Services.Mapster;
 using Celebrai.Application.UseCases.Fornecedor.Register;
+using Celebrai.Application.UseCases.Fornecedor.Delete;
 using Celebrai.Application.UseCases.Login.DoLogin;
 using Celebrai.Application.UseCases.Produto.Register;
 using Celebrai.Application.UseCases.Usuario.ChangeAddress;
@@ -35,6 +36,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetUsuarioProfileUseCase, GetUsuarioProfileUseCase>();
         services.AddScoped<IRequestDeleteUsuarioUseCase, RequestDeleteUsuarioUseCase>();
         services.AddScoped<IRegisterFornecedorUseCase, RegisterFornecedorUseCase>();
+        services.AddScoped<IDeleteFornecedorUseCase, DeleteFornecedorUseCase>();
         services.AddScoped<IRegisterProdutoUseCase, RegisterProdutoUseCase>();
     }
 
