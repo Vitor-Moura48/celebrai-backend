@@ -23,4 +23,7 @@ public class UsuarioRepository : IUsuarioReadOnlyRepository, IUsuarioWriteOnlyRe
     public async Task<Usuario?> GetById(Guid userIdentifier) => await _context.Usuario.FirstOrDefaultAsync(user => user.IdUsuario == userIdentifier);
 
     public void Update(Usuario user) => _context.Usuario.Update(user);
+
+    public async Task<Usuario?> GetByIdUsuario(Guid userIdentifier)
+        => await _context.Usuario.FirstOrDefaultAsync(user => user.IdUsuario == userIdentifier);
 }
