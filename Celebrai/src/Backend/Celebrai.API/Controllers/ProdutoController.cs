@@ -26,7 +26,7 @@ public class ProdutoController : CelebraiBaseController
 
     [HttpGet]
     [Route("{id}")]
-    [ProducesResponseType(typeof(ResponseProdutoJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseLongProdutoJson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProdutoById(
         [FromServices] IGetProdutoByIdUseCase useCase,

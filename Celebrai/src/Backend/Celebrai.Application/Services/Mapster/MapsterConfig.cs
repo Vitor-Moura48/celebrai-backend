@@ -30,5 +30,7 @@ public class MapsterConfig : IRegister
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
         config.NewConfig<Produto, ResponseShortProdutoJson>()
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
+        config.NewConfig<Produto, ResponseLongProdutoJson>()
+            .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
     }
 }
