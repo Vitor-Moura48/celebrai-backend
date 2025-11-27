@@ -6,7 +6,6 @@ using Celebrai.Domain.Repositories;
 using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Repositories.Produto;
 using Celebrai.Domain.Repositories.SubCategoria;
-using Celebrai.Domain.Repositories.Usuario;
 using Celebrai.Domain.Services.Cloudinary;
 using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Exceptions.ExceptionsBase;

@@ -1,5 +1,6 @@
 ﻿using Celebrai.Communication.Requests.Produto;
 using Celebrai.Communication.Requests.Usuario;
+using Celebrai.Communication.Responses.Produto;
 using Celebrai.Communication.Responses.Usuario;
 using Celebrai.Domain.Entities;
 using Mapster;
@@ -22,7 +23,12 @@ public class MapsterConfig : IRegister
 
     private void DomainToResponse(TypeAdapterConfig config)
     {
-        config.NewConfig<ResponseRegisteredUsuarioJson, Usuario>();
-        config.NewConfig<ResponseUsuarioProfileJson, Usuario>();
+        config.NewConfig<Usuario, ResponseRegisteredUsuarioJson>();
+        config.NewConfig<Usuario, ResponseUsuarioProfileJson>();
+
+        config.NewConfig<Produto, ResponseProdutoJson>()
+            .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
+        config.NewConfig<Produto, ResponseShortProdutoJson>()
+            .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
     }
 }
