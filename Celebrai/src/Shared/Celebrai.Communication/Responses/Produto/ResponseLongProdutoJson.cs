@@ -7,5 +7,6 @@ public class ResponseLongProdutoJson
     public string Descricao { get; set; } = string.Empty;
     public string SubCategoria { get; set; } = string.Empty;
     public decimal PrecoUnitario { get; set; }
+    public int QuantidadeAluguelPorDia { get; init; } = 1;
     public string ImagemUrl { get; set; } = string.Empty;
 }
