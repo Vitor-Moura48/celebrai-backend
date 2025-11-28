@@ -8,4 +8,5 @@ public record ResponseRegisteredProdutoJson
     public string Descricao { get; set; } = string.Empty;
     public string ImagemUrl { get; init; } = string.Empty;
     public string SubCategoria { get; init; } = string.Empty;
+    public int QuantidadeAluguelPorDia { get; init; } = 1;
 }

@@ -10,10 +10,10 @@ public class M202511270002AdicionarColunasNasTabelasPedidoKitEKit : Migration
     {
         if (Schema.Table("Kit").Column("QuantidadeAluguelPorDia").Exists() == false &&
             Schema.Table("Kit").Column("Nome").Exists() == false &&
-            Schema.Table("Kit").Column("Descricao").Exists() == false))
+            Schema.Table("Kit").Column("Descricao").Exists() == false)
         {
             Alter.Table("Kit")
-                .AddColumn("QuantidadeAluguelPorDia").AsInt32().NotNullable();
+                .AddColumn("QuantidadeAluguelPorDia").AsInt32().NotNullable()
                 .AddColumn("Nome").AsAnsiString(80).NotNullable()
                 .AddColumn("Descricao").AsAnsiString(400).NotNullable();
         }

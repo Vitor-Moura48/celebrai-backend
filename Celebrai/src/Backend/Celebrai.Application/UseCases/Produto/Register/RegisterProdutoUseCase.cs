@@ -78,7 +78,8 @@ public class RegisterProdutoUseCase : IRegisterProdutoUseCase
             Nome = request.Nome,
             Descricao = request.Descricao,
             ImagemUrl = resultImage.ImageUrl,
-            SubCategoria = request.SubCategoria.ToString()
+            SubCategoria = request.SubCategoria.ToString(),
+            QuantidadeAluguelPorDia = request.QuantidadeAluguelPorDia
         };
     }
 

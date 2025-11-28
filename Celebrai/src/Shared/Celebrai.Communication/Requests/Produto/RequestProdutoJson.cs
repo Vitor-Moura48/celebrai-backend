@@ -7,4 +7,5 @@ public class RequestProdutoJson
     public string Descricao { get; set; } = string.Empty;
     public SubCategoriaEnum SubCategoria { get; set; }
     public decimal PrecoUnitario { get; set; }
+    public int QuantidadeAluguelPorDia { get; init; } = 1;
 }
