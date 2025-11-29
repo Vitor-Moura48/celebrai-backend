@@ -24,6 +24,20 @@ public static class ValidationExtensions
             .Must(f => IsValidType(f)).WithMessage("Formato de imagem inválido. Use JPG ou PNG.");
     }
 
+    public static IRuleBuilderOptions<T, TimeSpan> MustBe30MinuteInterval<T>(this IRuleBuilder<T, TimeSpan> ruleBuilder)
+    {
+        return ruleBuilder
+            .Must(time => time.Minutes % 30 == 0 && time.Seconds == 0)
+            .WithMessage("O horário deve ser em intervalos de 30 minutos (ex: 08:00, 08:30).");
+    }
+
+    public static IRuleBuilderOptions<T, DayOfWeek> ValidDayOfWeek<T>(this IRuleBuilder<T, DayOfWeek> ruleBuilder)
+    {
+        return ruleBuilder
+            .IsInEnum()
+            .WithMessage("Dia da semana inválido.");
+    }
+
     private static bool IsValidType(IFormFile file)
     {
         if (file == null) return false;
