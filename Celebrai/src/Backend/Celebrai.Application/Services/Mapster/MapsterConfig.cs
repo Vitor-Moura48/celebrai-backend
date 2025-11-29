@@ -1,6 +1,7 @@
 ﻿using Celebrai.Communication.Requests.Kit;
 using Celebrai.Communication.Requests.Produto;
 using Celebrai.Communication.Requests.Usuario;
+using Celebrai.Communication.Responses.Disponibilidade;
 using Celebrai.Communication.Responses.Kit;
 using Celebrai.Communication.Responses.Produto;
 using Celebrai.Communication.Responses.Usuario;
@@ -36,6 +37,8 @@ public class MapsterConfig : IRegister
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
         config.NewConfig<Produto, ResponseLongProdutoJson>()
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
+
+        config.NewConfig<Disponibilidade, ResponseDisponibilidadeJson>();
         
         config.NewConfig<Kit, ResponseRegisteredKitJson>();
     }
