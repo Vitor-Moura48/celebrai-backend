@@ -5,7 +5,7 @@ using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Exceptions.ExceptionsBase;
 
-namespace Celebrai.Application.UseCases.Disponibilidade;
+namespace Celebrai.Application.UseCases.Disponibilidade.Register;
 
 public class RegisterDisponibilidadeUseCase : IRegisterDisponibilidadeUseCase
 {
@@ -34,7 +34,7 @@ public class RegisterDisponibilidadeUseCase : IRegisterDisponibilidadeUseCase
 
         var supplier = await _supplierReadOnlyRepository.GetByUserId(loggedUser.IdUsuario);
 
-        var newAvailability = request.Horarios.Select(h => new Celebrai.Domain.Entities.Disponibilidade
+        var newAvailability = request.Horarios.Select(h => new Domain.Entities.Disponibilidade
         {
             IdFornecedor = supplier!.IdFornecedor, 
             DiaSemana = h.DiaSemana,

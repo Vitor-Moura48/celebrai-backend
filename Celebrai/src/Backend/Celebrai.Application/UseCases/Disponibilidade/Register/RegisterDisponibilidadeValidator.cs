@@ -2,7 +2,7 @@
 using Celebrai.Communication.Requests.Disponibilidade;
 using FluentValidation;
 
-namespace Celebrai.Application.UseCases.Disponibilidade;
+namespace Celebrai.Application.UseCases.Disponibilidade.Register;
 
 public class RegisterDisponibilidadeValidator : AbstractValidator<RequestRegistedDisponibilidadeJson>
 {

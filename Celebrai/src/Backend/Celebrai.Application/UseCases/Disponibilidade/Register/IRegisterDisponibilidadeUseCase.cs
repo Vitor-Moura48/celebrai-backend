@@ -1,7 +1,7 @@
 ﻿using Celebrai.Communication.Requests.Disponibilidade;
 using Celebrai.Communication.Responses.Disponibilidade;
 
-namespace Celebrai.Application.UseCases.Disponibilidade;
+namespace Celebrai.Application.UseCases.Disponibilidade.Register;
 
 public interface IRegisterDisponibilidadeUseCase
 {

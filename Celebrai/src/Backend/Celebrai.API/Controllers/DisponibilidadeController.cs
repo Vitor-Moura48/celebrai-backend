@@ -1,5 +1,5 @@
 ﻿using Celebrai.API.Attributes;
-using Celebrai.Application.UseCases.Disponibilidade;
+using Celebrai.Application.UseCases.Disponibilidade.Register;
 using Celebrai.Communication.Requests.Disponibilidade;
 using Celebrai.Communication.Responses;
 using Microsoft.AspNetCore.Mvc;

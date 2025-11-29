@@ -18,7 +18,7 @@ using Celebrai.Application.UseCases.Usuario.UpdateEmail;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Celebrai.Application.UseCases.Disponibilidade;
+using Celebrai.Application.UseCases.Disponibilidade.Register;
 
 namespace Celebrai.Application;
 public static class DependencyInjectionExtension
