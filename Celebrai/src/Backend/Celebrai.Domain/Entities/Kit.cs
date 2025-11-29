@@ -8,4 +8,5 @@ public class Kit
     public string Descricao { get; set; } = string.Empty;
     public int QuantidadeAluguelPorDia { get; set; } = 1;
 
+    public ICollection<ProdutoKit> ProdutosKit { get; set; } = new List<ProdutoKit>();
 }
