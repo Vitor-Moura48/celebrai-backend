@@ -29,10 +29,10 @@ public class FornecedorRepository : IFornecedorReadOnlyRepository, IFornecedorWr
     public async Task<bool> ExistActiveFornecedorWithCNPJ(string cnpj) => await _context.PessoaJuridica.AnyAsync(pj => pj.Cnpj.Equals(cnpj) && pj.Fornecedor.Ativo);
 
     public async Task<Fornecedor?> GetByEmail(string email)
-        => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.Usuario.Email.Equals(email));
+        => await _context.Fornecedor.AsNoTracking().FirstOrDefaultAsync(fornecedor => fornecedor.Usuario.Email.Equals(email));
 
     public async Task<Fornecedor?> GetByUserId(Guid userId)
-        => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.IdUsuario == userId);
+        => await _context.Fornecedor.AsNoTracking().FirstOrDefaultAsync(fornecedor => fornecedor.IdUsuario == userId);
 
     public async Task<Fornecedor?> GetById(Guid fornecedorIdentifier) => await _context.Fornecedor.FirstOrDefaultAsync(fornecedor => fornecedor.IdUsuario == fornecedorIdentifier);
 
