@@ -1,5 +1,7 @@
-﻿using Celebrai.Communication.Requests.Produto;
+﻿using Celebrai.Communication.Requests.Kit;
+using Celebrai.Communication.Requests.Produto;
 using Celebrai.Communication.Requests.Usuario;
+using Celebrai.Communication.Responses.Kit;
 using Celebrai.Communication.Responses.Produto;
 using Celebrai.Communication.Responses.Usuario;
 using Celebrai.Domain.Entities;
@@ -19,6 +21,8 @@ public class MapsterConfig : IRegister
         config.NewConfig<RequestRegisterUsuarioJson, Usuario>();
 
         config.NewConfig<RequestRegisterProdutoFormData, Produto>();
+        
+        config.NewConfig<RequestKitJson, Kit>();
     }
 
     private void DomainToResponse(TypeAdapterConfig config)
@@ -32,5 +36,7 @@ public class MapsterConfig : IRegister
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
         config.NewConfig<Produto, ResponseLongProdutoJson>()
             .Map(dest => dest.SubCategoria, src => src.SubCategoria.Nome ?? string.Empty);
+        
+        config.NewConfig<Kit, ResponseRegisteredKitJson>();
     }
 }

@@ -19,6 +19,7 @@ using Celebrai.Application.UseCases.Usuario.UpdateEmail;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Celebrai.Application.UseCases.Kit.Register;
 
 namespace Celebrai.Application;
 public static class DependencyInjectionExtension
@@ -48,6 +49,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetProdutoByIdUseCase, GetProdutoByIdUseCase>();
         services.AddScoped<IGetListProdutoUseCase, GetListProdutoUseCase>();
         services.AddScoped<IGetListWithFilterProdutoUseCase, GetListWithFilterProdutoUseCase>();
+        services.AddScoped<IRegisterKitUseCase, RegisterKitUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)
