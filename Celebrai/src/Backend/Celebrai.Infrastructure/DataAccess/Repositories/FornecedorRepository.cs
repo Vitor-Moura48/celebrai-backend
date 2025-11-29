@@ -43,4 +43,11 @@ public class FornecedorRepository : IFornecedorReadOnlyRepository, IFornecedorWr
 
     public async Task<Fornecedor?> GetByIdFornecedor(Guid fornecedorIdentifier)
         => await _context.Fornecedor.AsNoTracking().FirstOrDefaultAsync(fornecedor => fornecedor.IdFornecedor == fornecedorIdentifier);
+
+    public async Task<PessoaFisica?> GetByIdPessoaFisica(Guid fornecedorIdentifier)
+        => await _context.PessoaFisica.AsNoTracking().FirstOrDefaultAsync(PessoaFisica => PessoaFisica.IdFornecedor == fornecedorIdentifier);
+
+    public async Task<PessoaJuridica?> GetByIdPessoaJuridica(Guid fornecedorIdentifier)
+            => await _context.PessoaJuridica.AsNoTracking().FirstOrDefaultAsync(PessoaJuridica => PessoaJuridica.IdFornecedor == fornecedorIdentifier);
+
 }
