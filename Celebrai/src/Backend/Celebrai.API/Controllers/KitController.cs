@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure;
 using Celebrai.API.Attributes;
 using Celebrai.Application.UseCases.Kit.GetById;
 using Celebrai.Application.UseCases.Kit.Register;
-using Celebrai.Application.UseCases.Produto.GetList;
+using Celebrai.Application.UseCases.Kit.GetList;
 using Celebrai.Communication.Requests.Kit;
 using Celebrai.Communication.Responses;
 using Celebrai.Communication.Responses.Kit;
