@@ -1,4 +1,3 @@
-using System.Data;
 using Celebrai.Communication.Requests.Pedido;
 using FluentValidation;
 

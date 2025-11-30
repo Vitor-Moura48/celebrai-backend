@@ -24,4 +24,7 @@ public class PedidoRepository : IPedidoReadOnlyRepository, IPedidoWriteOnlyRepos
         => await _context.Pedido.AsNoTracking().Where(pedido => pedido.IdUsuario == userId).ToListAsync();
    
     public void Update(Pedido pedido) => _context.Pedido.Update(pedido);
+
+    public async Task<bool> ExistPedidoWithIdentifier(int id)
+        => await _context.Pedido.AnyAsync(pedido => pedido.IdPedido.Equals(id));
 }
