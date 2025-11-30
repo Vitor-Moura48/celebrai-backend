@@ -59,4 +59,7 @@ public class ProdutoRepository : IProdutoWriteOnlyRepository, IProdutoReadOnlyRe
             .Take(pageSize)
             .ToListAsync();
     }
+
+    public async Task<bool> ExistProdutoWithIdentifier(int id)
+        => await _context.Produto.AnyAsync(produto => produto.IdProduto.Equals(id));
 }

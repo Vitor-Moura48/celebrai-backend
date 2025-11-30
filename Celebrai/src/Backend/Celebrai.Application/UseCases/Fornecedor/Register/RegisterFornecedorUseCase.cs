@@ -93,7 +93,7 @@ public class RegisterFornecedorUseCase : IRegisterFornecedorUseCase
 
         var result = await validator.ValidateAsync(request);
 
-        var userExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithIdentifier(loggedUser.IdUsuario);
+        var userExist = await _fornecedorReadOnlyRepository.ExistActiveFornecedorWithUserIdentifier(loggedUser.IdUsuario);
 
         if (userExist)
             result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, "O Usuário já está com conta de fornecedor na plataforma"));
