@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Celebrai.Application.UseCases.Disponibilidade.Register;
 using Celebrai.Application.UseCases.Disponibilidade.GetHoursFornecedor;
 using Celebrai.Application.UseCases.Pedido.Register;
+using Celebrai.Application.UseCases.Pedido.GetList;
 
 namespace Celebrai.Application;
 public static class DependencyInjectionExtension
@@ -54,6 +55,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterDisponibilidadeUseCase, RegisterDisponibilidadeUseCase>();
         services.AddScoped<IGetHoursFornecedorUseCase, GetHoursFornecedorUseCase>();
         services.AddScoped<IRegisterPedidoUseCase, RegisterPedidoUseCase>();
+        services.AddScoped<IGetListPedidoUseCase, GetListPedidoUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)
