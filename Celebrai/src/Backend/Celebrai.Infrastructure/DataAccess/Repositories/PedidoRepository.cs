@@ -19,6 +19,9 @@ public class PedidoRepository : IPedidoReadOnlyRepository, IPedidoWriteOnlyRepos
 
     public async Task<Pedido?> GetByUserId(Guid userId)
         => await _context.Pedido.AsNoTracking().FirstOrDefaultAsync(pedido => pedido.IdUsuario == userId);
+
+    public async Task<List<Pedido>> GetListByUserId(Guid userId)
+        => await _context.Pedido.AsNoTracking().Where(pedido => pedido.IdUsuario == userId).ToListAsync();
    
     public void Update(Pedido pedido) => _context.Pedido.Update(pedido);
 }
