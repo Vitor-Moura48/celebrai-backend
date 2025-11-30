@@ -1,6 +1,6 @@
 using Celebrai.Communication.Responses.Kit;
 
-namespace Celebrai.Application.UseCases.Produto.GetList;
+namespace Celebrai.Application.UseCases.Kit.GetList;
 
 public interface IGetListKitUseCase
 {

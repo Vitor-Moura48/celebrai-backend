@@ -1,4 +1,3 @@
-using Celebrai.Application.UseCases.Produto.GetList;
 using Celebrai.Communication.Responses.Kit;
 using Celebrai.Domain.Repositories.Kit;
 using MapsterMapper;

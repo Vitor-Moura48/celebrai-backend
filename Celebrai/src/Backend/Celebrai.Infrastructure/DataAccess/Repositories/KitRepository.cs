@@ -1,5 +1,4 @@
-﻿using Celebrai.Domain.Dtos;
-using Celebrai.Domain.Entities;
+﻿using Celebrai.Domain.Entities;
 using Celebrai.Domain.Repositories.Kit;
 using Microsoft.EntityFrameworkCore;
 
