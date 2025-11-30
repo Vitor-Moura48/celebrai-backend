@@ -1,9 +1,8 @@
-﻿using Celebrai.Communication.Enums;
-
-namespace Celebrai.Communication.Responses.Produto;
+﻿namespace Celebrai.Communication.Responses.Produto;
 
 public record ResponseProdutoJson
 {
+    public int IdProduto { get; set; }
     public string Nome { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
     public string SubCategoria { get; set; } = string.Empty;
