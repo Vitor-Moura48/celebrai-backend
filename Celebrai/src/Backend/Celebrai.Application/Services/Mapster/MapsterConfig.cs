@@ -41,5 +41,7 @@ public class MapsterConfig : IRegister
         config.NewConfig<Disponibilidade, ResponseDisponibilidadeJson>();
         
         config.NewConfig<Kit, ResponseRegisteredKitJson>();
+        config.NewConfig<Kit, ResponseKitJson>()
+            .Map(dest => dest.Produtos, src => src.ProdutosKit.Select(produtoKit => produtoKit.Produto));
     }
 }

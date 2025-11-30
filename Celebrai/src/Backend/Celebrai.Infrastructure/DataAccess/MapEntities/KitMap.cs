@@ -14,5 +14,7 @@ public class KitMap : BaseMap<Kit>
 
         builder.HasKey(x => x.IdKit);
         builder.Property(x => x.IdKit).ValueGeneratedOnAdd();
+
+        builder.Property(x => x.KitPreco).HasPrecision(18, 2);
     }
 }
