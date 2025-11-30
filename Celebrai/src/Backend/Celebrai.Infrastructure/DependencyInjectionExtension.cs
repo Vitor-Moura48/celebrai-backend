@@ -4,6 +4,7 @@ using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Repositories.Produto;
 using Celebrai.Domain.Repositories.SubCategoria;
 using Celebrai.Domain.Repositories.Usuario;
+using Celebrai.Domain.Repositories.Pedido;
 using Celebrai.Domain.Security.Cryptography;
 using Celebrai.Domain.Security.Tokens;
 using Celebrai.Domain.Services.Cloudinary;
@@ -66,6 +67,10 @@ public static class DependencyInjectionExtension
         services.AddScoped<IProdutoReadOnlyRepository, ProdutoRepository>();
         services.AddScoped<IDisponibilidadeWriteOnlyRepository, DisponibilidadeRepository>();
         services.AddScoped<IDisponibilidadeReadOnlyRepository, DisponibilidadeRepository>();
+
+        services.AddScoped<IPedidoReadOnlyRepository, PedidoRepository>();
+        services.AddScoped<IPedidoUpdateOnlyRepository, PedidoRepository>();
+        services.AddScoped<IPedidoWriteOnlyRepository, PedidoRepository>();
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)
