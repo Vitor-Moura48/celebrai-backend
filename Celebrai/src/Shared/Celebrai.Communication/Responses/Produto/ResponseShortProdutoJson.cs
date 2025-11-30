@@ -2,6 +2,7 @@
 
 public record ResponseShortProdutoJson
 {
+    public int IdProduto { get; set; }
     public string Nome { get; set; } = string.Empty;
     public string SubCategoria { get; set; } = string.Empty;
     public decimal PrecoUnitario { get; set; }
