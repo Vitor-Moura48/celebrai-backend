@@ -1,5 +1,6 @@
 using Celebrai.API.Attributes;
 using Celebrai.Application.UseCases.Pedido.Register;
+using Celebrai.Application.UseCases.Pedido.GetList;
 using Celebrai.Communication.Requests.Pedido;
 using Celebrai.Communication.Responses;
 using Celebrai.Communication.Responses.Pedido;
@@ -20,5 +21,17 @@ public class PedidoController : CelebraiBaseController
         var result = await useCase.Execute(request);
 
         return Created(string.Empty, result);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseListPedidoJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [AuthenticatedUser(RoleUsuario.Cliente, RoleUsuario.Fornecedor)]
+    public async Task<IActionResult> List(
+        [FromServices] IGetListPedidoUseCase useCase
+    )
+    {
+        var result = await useCase.Execute();
+        return Ok(result);
     }
 }
