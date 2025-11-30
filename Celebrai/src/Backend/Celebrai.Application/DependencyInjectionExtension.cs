@@ -4,6 +4,7 @@ using Celebrai.Application.UseCases.Fornecedor.Delete;
 using Celebrai.Application.UseCases.Fornecedor.Update;
 using Celebrai.Application.UseCases.Fornecedor.Profile;
 using Celebrai.Application.UseCases.FornecedorPedido.Register;
+using Celebrai.Application.UseCases.PedidoProduto.Register;
 using Celebrai.Application.UseCases.Login.DoLogin;
 using Celebrai.Application.UseCases.Produto.GetById;
 using Celebrai.Application.UseCases.Produto.GetList;
@@ -24,6 +25,10 @@ using Celebrai.Application.UseCases.Disponibilidade.Register;
 using Celebrai.Application.UseCases.Disponibilidade.GetHoursFornecedor;
 using Celebrai.Application.UseCases.Pedido.Register;
 using Celebrai.Application.UseCases.Pedido.GetList;
+using Celebrai.Application.UseCases.Kit.Register;
+using Celebrai.Application.UseCases.Kit.GetList;
+using Celebrai.Application.UseCases.Kit.GetById;
+using Celebrai.Application.UseCases.Kit.GetKitById;
 
 namespace Celebrai.Application;
 public static class DependencyInjectionExtension
@@ -58,6 +63,10 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterPedidoUseCase, RegisterPedidoUseCase>();
         services.AddScoped<IGetListPedidoUseCase, GetListPedidoUseCase>();
         services.AddScoped<IRegisterFornecedorPedidoUseCase, RegisterFornecedorPedidoUseCase>();
+        services.AddScoped<IRegisterPedidoProdutoUseCase, RegisterPedidoProdutoUseCase>();
+        services.AddScoped<IRegisterKitUseCase, RegisterKitUseCase>();
+        services.AddScoped<IGetListKitUseCase, GetListKitUseCase>();
+        services.AddScoped<IGetKitByIdUseCase, GetKitByIdUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)

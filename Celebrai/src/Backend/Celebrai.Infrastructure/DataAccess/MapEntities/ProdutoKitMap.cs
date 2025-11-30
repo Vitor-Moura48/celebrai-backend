@@ -16,7 +16,7 @@ public class ProdutoKitMap : BaseMap<ProdutoKit>
         builder.HasKey(x => new { x.IdKit, x.IdProduto });
 
         builder.HasOne(x => x.Kit)
-               .WithMany()
+               .WithMany(k => k.ProdutosKit)
                .HasForeignKey(x => x.IdKit)
                .HasConstraintName("FK_ProdKit_Kit");
 
