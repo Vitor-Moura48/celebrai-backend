@@ -73,6 +73,10 @@ public static class DependencyInjectionExtension
         services.AddScoped<IPedidoReadOnlyRepository, PedidoRepository>();
         services.AddScoped<IPedidoUpdateOnlyRepository, PedidoRepository>();
         services.AddScoped<IPedidoWriteOnlyRepository, PedidoRepository>();
+        services.AddScoped<IFornecedorPedidoWriteOnlyRepository, FornecedorPedidoRepository>();
+        services.AddScoped<IPedidoProdutoWriteOnlyRepository, PedidoProdutoRepository>();
+        services.AddScoped<IKitReadOnlyRepository, KitRepository>();
+        services.AddScoped<IKitWriteOnlyRepository, KitRepository>();
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)
