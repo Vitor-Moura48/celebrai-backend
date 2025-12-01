@@ -16,6 +16,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
   WORKING_DIRECTORY: Celebrai/src/Backend/Celebrai.API
+  MIGRATIONS_PROJECT: Celebrai/src/Backend/Celebrai.Infrastructure
 
 jobs:
   build:
@@ -47,9 +48,33 @@ jobs:
       - name: Test
         run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build --verbosity normal
 
-      - name: Publish
+      - name: Publish API
         run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
+      - name: Run FluentMigrator migrations (apply DB schema)
+        env:
+          AZURE_SQL_CONN: ${{ secrets.CELEBRAI_SQL_CONN }}
+        run: |
+          # instala a tool do FluentMigrator
+          dotnet tool install --global FluentMigrator.DotNet.Cli || dotnet tool update --global FluentMigrator.DotNet.Cli
+          export PATH="$HOME/.dotnet/tools:$PATH"
+
+          # publica o projeto de migrations
+          dotnet publish "${{ env.MIGRATIONS_PROJECT }}" -c Release
+
+          # caminho da DLL gerada (ajuste net9.0 se necessário)
+          DLL_PATH="${{ env.MIGRATIONS_PROJECT }}/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
+
+          echo "Usando assembly: $DLL_PATH"
+          if [ ! -f "$DLL_PATH" ]; then
+            echo "ERRO: assembly de migrations não encontrado em $DLL_PATH"
+            ls -la "${{ env.MIGRATIONS_PROJECT }}/bin/Release"
+            exit 1
+          fi
+
+          # executa o migrate apontando para a connection string segura
+          dotnet fm migrate -a "$DLL_PATH" -c "$AZURE_SQL_CONN"
+      
       - name: Zip published output
         run: |
           cd Celebrai/src/Backend/Celebrai.API
