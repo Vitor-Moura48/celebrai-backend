@@ -15,7 +15,7 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: Celebrai/src/Backend/Celebrai.API/publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
-  WORKING_DIRECTORY: src/Backend/Celebrai.API
+  WORKING_DIRECTORY: Celebrai/src/Backend/Celebrai.API
 
 jobs:
   build:
@@ -24,6 +24,14 @@ jobs:
       package-path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
@@ -40,13 +48,14 @@ jobs:
         run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish "${{ env.Working_Directory }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
       - name: Zip published output
         run: |
-          cd src/Backend/Celebrai.API
+          cd Celebrai/src/Backend/Celebrai.API
           zip -r ../../../../app.zip publish
           cd -
+          ls -la ./app.zip
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
