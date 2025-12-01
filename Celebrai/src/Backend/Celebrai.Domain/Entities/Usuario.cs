@@ -6,9 +6,9 @@ public class Usuario
     public Guid IdUsuario { get; set; } = Guid.NewGuid();
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Senha { get; set; } = string.Empty;
     public string? Celular { get; set; }
     public string CpfUsuario { get; set; } = string.Empty;
-    public string IdExterno { get; set; } = string.Empty;
     public DateOnly DataNascimento { get; set; }
     public string? UrlIcon { get; set; }
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;

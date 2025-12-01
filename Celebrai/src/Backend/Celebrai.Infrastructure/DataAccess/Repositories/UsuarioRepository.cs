@@ -11,13 +11,19 @@ public class UsuarioRepository : IUsuarioReadOnlyRepository, IUsuarioWriteOnlyRe
 
     public async Task Add(Usuario user) => await _context.Usuario.AddAsync(user);
 
-    public async Task<bool> ExistUserWithEmail(string email) => await _context.Usuario.AnyAsync(user => user.Email.Equals(email));
+    public async Task<bool> ExistActiveUserWithEmail(string email) => await _context.Usuario.AnyAsync(user => user.Email.Equals(email) && user.Ativo);
 
-    public Task<Usuario?> GetByAuthProviderIdAsync(string authProviderId)
-        => _context.Usuario.FirstOrDefaultAsync(user => user.IdExterno.Equals(authProviderId));
+    public async Task<bool> ExistUserWithCpf(string cpf) => await _context.Usuario.AnyAsync(user => user.CpfUsuario.Equals(cpf));
+
+    public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier) => await _context.Usuario.AnyAsync(user => user.IdUsuario.Equals(userIdentifier) && user.Ativo);
 
     public async Task<Usuario?> GetByEmail(string email)
         => await _context.Usuario.FirstOrDefaultAsync(user => user.Email.Equals(email));
 
+    public async Task<Usuario?> GetById(Guid userIdentifier) => await _context.Usuario.FirstOrDefaultAsync(user => user.IdUsuario == userIdentifier);
+
     public void Update(Usuario user) => _context.Usuario.Update(user);
+
+    public async Task<Usuario?> GetByIdUsuario(Guid userIdentifier)
+        => await _context.Usuario.FirstOrDefaultAsync(user => user.IdUsuario == userIdentifier);
 }

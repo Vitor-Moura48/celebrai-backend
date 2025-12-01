@@ -8,7 +8,8 @@ public class PedidoProduto
     public decimal Preco { get; set; }
     public string? Avaliacao { get; set; }
     public int? Nota { get; set; }
+    public DateOnly Data { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-    public Pedido Pedido { get; set; }
-    public Produto Produto { get; set; }
+    public Pedido Pedido { get; set; } = default!;
+    public Produto Produto { get; set; } = default!;
 }

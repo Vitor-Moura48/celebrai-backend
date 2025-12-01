@@ -1,8 +1,35 @@
 ﻿using Celebrai.Application.Services.Mapster;
+using Celebrai.Application.UseCases.Fornecedor.Register;
+using Celebrai.Application.UseCases.Fornecedor.Delete;
+using Celebrai.Application.UseCases.Fornecedor.Update;
+using Celebrai.Application.UseCases.Fornecedor.Profile;
+using Celebrai.Application.UseCases.FornecedorPedido.Register;
+using Celebrai.Application.UseCases.PedidoProduto.Register;
+using Celebrai.Application.UseCases.PedidoKit.Register;
+using Celebrai.Application.UseCases.Login.DoLogin;
+using Celebrai.Application.UseCases.Produto.GetById;
+using Celebrai.Application.UseCases.Produto.GetList;
+using Celebrai.Application.UseCases.Produto.GetListWithFilter;
+using Celebrai.Application.UseCases.Produto.Register;
+using Celebrai.Application.UseCases.Usuario.ChangeAddress;
+using Celebrai.Application.UseCases.Usuario.ChangePassword;
+using Celebrai.Application.UseCases.Usuario.ConfirmEmail;
+using Celebrai.Application.UseCases.Usuario.Delete;
+using Celebrai.Application.UseCases.Usuario.Profile;
 using Celebrai.Application.UseCases.Usuario.Register;
+using Celebrai.Application.UseCases.Usuario.Update;
+using Celebrai.Application.UseCases.Usuario.UpdateEmail;
 using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Celebrai.Application.UseCases.Disponibilidade.Register;
+using Celebrai.Application.UseCases.Disponibilidade.GetHoursFornecedor;
+using Celebrai.Application.UseCases.Pedido.Register;
+using Celebrai.Application.UseCases.Pedido.GetList;
+using Celebrai.Application.UseCases.Kit.Register;
+using Celebrai.Application.UseCases.Kit.GetList;
+using Celebrai.Application.UseCases.Kit.GetById;
+using Celebrai.Application.UseCases.Kit.GetKitById;
 
 namespace Celebrai.Application;
 public static class DependencyInjectionExtension
@@ -16,6 +43,32 @@ public static class DependencyInjectionExtension
     private static void AddUseCases(IServiceCollection services)
     {
         services.AddScoped<IRegisterUsuarioUseCase, RegisterUsuarioUseCase>();
+        services.AddScoped<IConfirmEmailUsuarioUseCase, ConfirmEmailUsuarioUseCase>();
+        services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
+        services.AddScoped<IUpdateUsuarioUseCase, UpdateUsuarioUseCase>();
+        services.AddScoped<IUpdateEmailUsuarioUseCase, UpdateEmailUsuarioUseCase>();
+        services.AddScoped<IChangeAddressUsuarioUseCase, ChangeAddressUsuarioUseCase>();
+        services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
+        services.AddScoped<IGetUsuarioProfileUseCase, GetUsuarioProfileUseCase>();
+        services.AddScoped<IRequestDeleteUsuarioUseCase, RequestDeleteUsuarioUseCase>();
+        services.AddScoped<IRegisterFornecedorUseCase, RegisterFornecedorUseCase>();
+        services.AddScoped<IDeleteFornecedorUseCase, DeleteFornecedorUseCase>();
+        services.AddScoped<IUpdateFornecedorUseCase, UpdateFornecedorUseCase>();
+        services.AddScoped<IGetFornecedorProfileUseCase, GetFornecedorProfileUseCase>();
+        services.AddScoped<IRegisterProdutoUseCase, RegisterProdutoUseCase>();
+        services.AddScoped<IGetProdutoByIdUseCase, GetProdutoByIdUseCase>();
+        services.AddScoped<IGetListProdutoUseCase, GetListProdutoUseCase>();
+        services.AddScoped<IGetListWithFilterProdutoUseCase, GetListWithFilterProdutoUseCase>();
+        services.AddScoped<IRegisterDisponibilidadeUseCase, RegisterDisponibilidadeUseCase>();
+        services.AddScoped<IGetHoursFornecedorUseCase, GetHoursFornecedorUseCase>();
+        services.AddScoped<IRegisterPedidoUseCase, RegisterPedidoUseCase>();
+        services.AddScoped<IGetListPedidoUseCase, GetListPedidoUseCase>();
+        services.AddScoped<IRegisterFornecedorPedidoUseCase, RegisterFornecedorPedidoUseCase>();
+        services.AddScoped<IRegisterPedidoProdutoUseCase, RegisterPedidoProdutoUseCase>();
+        services.AddScoped<IRegisterPedidoKitUseCase, RegisterPedidoKitUseCase>();
+        services.AddScoped<IRegisterKitUseCase, RegisterKitUseCase>();
+        services.AddScoped<IGetListKitUseCase, GetListKitUseCase>();
+        services.AddScoped<IGetKitByIdUseCase, GetKitByIdUseCase>();
     }
 
     private static void AddMapster(IServiceCollection services)

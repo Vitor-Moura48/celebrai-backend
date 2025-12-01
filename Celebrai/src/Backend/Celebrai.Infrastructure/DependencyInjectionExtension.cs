@@ -1,14 +1,29 @@
 ﻿using Celebrai.Domain.Repositories;
+using Celebrai.Domain.Repositories.Disponibilidade;
+using Celebrai.Domain.Repositories.Fornecedor;
+using Celebrai.Domain.Repositories.FornecedorPedido;
+using Celebrai.Domain.Repositories.PedidoProduto;
+using Celebrai.Domain.Repositories.PedidoKit;
+using Celebrai.Domain.Repositories.Kit;
+using Celebrai.Domain.Repositories.Produto;
+using Celebrai.Domain.Repositories.SubCategoria;
 using Celebrai.Domain.Repositories.Usuario;
-using Celebrai.Domain.Services.AuthService;
+using Celebrai.Domain.Repositories.Pedido;
+using Celebrai.Domain.Security.Cryptography;
+using Celebrai.Domain.Security.Tokens;
+using Celebrai.Domain.Services.Cloudinary;
 using Celebrai.Domain.Services.EmailService;
+using Celebrai.Domain.Services.LoggedUser;
 using Celebrai.Infrastructure.DataAccess;
 using Celebrai.Infrastructure.DataAccess.Repositories;
-using Celebrai.Infrastructure.Services.AuthService;
+using Celebrai.Infrastructure.Security.Cryptography;
+using Celebrai.Infrastructure.Security.Tokens.Access.Generator;
+using Celebrai.Infrastructure.Security.Tokens.Access.Validator;
+using Celebrai.Infrastructure.Services.Cloudinary;
 using Celebrai.Infrastructure.Services.EmailService;
-using FirebaseAdmin;
+using Celebrai.Infrastructure.Services.LoggedUser;
+using CloudinaryDotNet;
 using FluentMigrator.Runner;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +39,11 @@ public static class DependencyInjectionExtension
         AddDbContext(services, configuration);
         AddRepositories(services);
         AddFluentMigrator(services, configuration);
-        AddFirebaseAuthService(services, configuration);
+        AddTokens(services, configuration);
         AddSendGridService(services, configuration);
+        AddPasswordEncrpter(services);
+        AddLoggedUser(services);
+        AddCloudinary(services, configuration);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -44,7 +62,25 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IUsuarioReadOnlyRepository, UsuarioRepository>();
         services.AddScoped<IUsuarioUpdateOnlyRepository, UsuarioRepository>();
-        services.AddScoped<IUsuarioWriteOnlyRepository, UsuarioRepository>();   
+        services.AddScoped<IUsuarioWriteOnlyRepository, UsuarioRepository>();
+        services.AddScoped<IFornecedorReadOnlyRepository, FornecedorRepository>();
+        services.AddScoped<IFornecedorUpdateOnlyRepository, FornecedorRepository>();
+        services.AddScoped<IFornecedorWriteOnlyRepository, FornecedorRepository>();
+        services.AddScoped<ISubCategoriaReadOnlyRepository, SubCategoriaRepository>();
+        services.AddScoped<IProdutoWriteOnlyRepository, ProdutoRepository>();
+        services.AddScoped<IProdutoReadOnlyRepository, ProdutoRepository>();
+        services.AddScoped<IDisponibilidadeWriteOnlyRepository, DisponibilidadeRepository>();
+        services.AddScoped<IDisponibilidadeReadOnlyRepository, DisponibilidadeRepository>();
+        services.AddScoped<IPedidoReadOnlyRepository, PedidoRepository>();
+        services.AddScoped<IPedidoUpdateOnlyRepository, PedidoRepository>();
+        services.AddScoped<IPedidoWriteOnlyRepository, PedidoRepository>();
+        services.AddScoped<IFornecedorPedidoWriteOnlyRepository, FornecedorPedidoRepository>();
+        services.AddScoped<IPedidoProdutoReadOnlyRepository, PedidoProdutoRepository>();
+        services.AddScoped<IPedidoProdutoWriteOnlyRepository, PedidoProdutoRepository>();
+        services.AddScoped<IPedidoKitReadOnlyRepository, PedidoKitRepository>();
+        services.AddScoped<IPedidoKitWriteOnlyRepository, PedidoKitRepository>();
+        services.AddScoped<IKitReadOnlyRepository, KitRepository>();
+        services.AddScoped<IKitWriteOnlyRepository, KitRepository>();
     }
 
     private static void AddFluentMigrator(IServiceCollection services, IConfiguration configuration)
@@ -60,16 +96,15 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddFirebaseAuthService(IServiceCollection services, IConfiguration configuration)
+    private static void AddTokens(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IAuthService, FirebaseAuthService>();
+        var expirationTimeMinutes = uint.Parse(configuration["Settings:Jwt:ExpirationTimeMinutes"]!);
+        var signingKey = configuration["Settings:Jwt:SigningKey"];
 
-        string credentialPath = configuration["Settings:Firebase:CredentialPath"]!;
-        FirebaseApp.Create(new AppOptions()
-        {
-            Credential = GoogleCredential.FromFile(credentialPath),
-        });
+        services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+        services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
     }
+
     private static void AddSendGridService(IServiceCollection services, IConfiguration configuration)
     {
         string fromEmail = configuration["Settings:SendGrid:FromEmail"]!;
@@ -86,5 +121,31 @@ public static class DependencyInjectionExtension
             var sendGridClient = sp.GetRequiredService<ISendGridClient>();
             return new SendGridEmailService(sendGridClient, fromEmail, fromName);
         });
+    }
+
+    private static void AddPasswordEncrpter(IServiceCollection services)
+    {
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
+    }
+
+    private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
+
+    private static void AddCloudinary(IServiceCollection services, IConfiguration configuration)
+    {
+        var cloudinarySettings = configuration
+            .GetSection("Settings:Cloudinary");
+
+        services.AddSingleton(cloudinarySettings);
+
+        services.AddSingleton(provider =>
+        {
+            var account = new Account(
+                configuration["Settings:Cloudinary:CloudName"],
+                configuration["Settings:Cloudinary:ApiKey"],
+                configuration["Settings:Cloudinary:ApiSecret"]);
+            return new Cloudinary(account);
+        });
+
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
     }
 }

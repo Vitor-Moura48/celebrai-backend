@@ -19,11 +19,6 @@ public class PedidoMap : BaseMap<Pedido>
                .HasForeignKey(x => x.IdUsuario)
                .HasConstraintName("FK_Pedido_Usuario");
 
-        builder.HasOne(x => x.Fornecedor)
-               .WithMany()
-               .HasForeignKey(x => x.IdFornecedor)
-               .HasConstraintName("FK_Pedido_Fornecedor");
-
         builder.HasOne(x => x.ModalidadeEntrega)
                .WithMany()
                .HasForeignKey(x => x.IdModalidadeEntrega)

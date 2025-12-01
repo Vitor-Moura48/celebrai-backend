@@ -2,6 +2,8 @@
 public interface IUsuarioReadOnlyRepository
 {
     public Task<Entities.Usuario?> GetByEmail(string email);
-    public Task<bool> ExistUserWithEmail(string email);
-    public Task<Entities.Usuario?> GetByAuthProviderIdAsync(string authProviderId);
+    public Task<Entities.Usuario?> GetByIdUsuario(Guid userIdentifier);
+    public Task<bool> ExistActiveUserWithEmail(string email);
+    public Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier);
+    public Task<bool> ExistUserWithCpf(string cpf);
 }
