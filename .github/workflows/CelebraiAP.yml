@@ -60,15 +60,15 @@ jobs:
           export PATH="$HOME/.dotnet/tools:$PATH"
 
           # publica o projeto de migrations
-          dotnet publish "${{ env.MIGRATIONS_PROJECT }}" -c Release
+          dotnet publish "Celebrai/src/Backend/Celebrai.Infrastructure" -c Release
 
           # caminho da DLL gerada (ajuste net9.0 se necessário)
-          DLL_PATH="${{ env.MIGRATIONS_PROJECT }}/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
+          DLL_PATH="Celebrai/src/Backend/Celebrai.Infrastructure/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
 
           echo "Usando assembly: $DLL_PATH"
           if [ ! -f "$DLL_PATH" ]; then
             echo "ERRO: assembly de migrations não encontrado em $DLL_PATH"
-            ls -la "${{ env.MIGRATIONS_PROJECT }}/bin/Release"
+            ls -la "Celebrai/src/Backend/Celebrai.Infrastructure/bin/Release"
             exit 1
           fi
 
@@ -76,8 +76,7 @@ jobs:
           dotnet fm migrate \
             --assembly "$DLL_PATH" \
             --connection "$AZURE_SQL_CONN" \
-            --processor sqlserver \
-            --task migrate
+            --processor sqlserver
 
       - name: Zip published output
         run: |
