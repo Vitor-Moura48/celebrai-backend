@@ -3,7 +3,7 @@ name: Compilar e implantar o aplicativo .NET Core no aplicativo Web CelebraiAP
 on:
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
 
 permissions:
@@ -12,7 +12,6 @@ permissions:
 
 env:
   AZURE_WEBAPP_NAME: CelebraiAP
-  AZURE_WEBAPP_PACKAGE_PATH: Celebrai/src/Backend/Celebrai.API/publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
   WORKING_DIRECTORY: Celebrai/src/Backend/Celebrai.API
@@ -49,7 +48,7 @@ jobs:
         run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build --verbosity normal
 
       - name: Publish API
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.WORKING_DIRECTORY }}/publish"
 
       - name: Run FluentMigrator migrations (apply DB schema)
         env:
@@ -76,7 +75,7 @@ jobs:
 
       - name: Zip published output
         run: |
-          cd Celebrai/src/Backend/Celebrai.API/publish
+          cd "${{ env.WORKING_DIRECTORY }}/publish"
           zip -r ../../../../app.zip .
           cd -
           ls -la ./app.zip
@@ -106,4 +105,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: './app.zip'
+          package: ./app.zip
