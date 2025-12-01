@@ -55,14 +55,11 @@ jobs:
         env:
           AZURE_SQL_CONN: ${{ secrets.CELEBRAI_SQL_CONN }}
         run: |
-          # instala/atualiza a tool do FluentMigrator
           dotnet tool install --global FluentMigrator.DotNet.Cli || dotnet tool update --global FluentMigrator.DotNet.Cli
           export PATH="$HOME/.dotnet/tools:$PATH"
 
-          # publica o projeto de migrations
           dotnet publish "Celebrai/src/Backend/Celebrai.Infrastructure" -c Release
 
-          # caminho da DLL gerada (ajuste net9.0 se necessário)
           DLL_PATH="Celebrai/src/Backend/Celebrai.Infrastructure/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
 
           echo "Usando assembly: $DLL_PATH"
@@ -72,7 +69,6 @@ jobs:
             exit 1
           fi
 
-          # executa o migrate apontando para a connection string segura
           dotnet fm migrate \
             --assembly "$DLL_PATH" \
             --connection "$AZURE_SQL_CONN" \
@@ -80,8 +76,8 @@ jobs:
 
       - name: Zip published output
         run: |
-          cd Celebrai/src/Backend/Celebrai.API
-          zip -r ../../../../app.zip publish
+          cd Celebrai/src/Backend/Celebrai.API/publish
+          zip -r ../../../../app.zip .
           cd -
           ls -la ./app.zip
 
