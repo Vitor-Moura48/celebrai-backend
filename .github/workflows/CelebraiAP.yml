@@ -74,8 +74,8 @@ jobs:
       - name: Zip published output
         run: |
           cd "${{ env.WORKING_DIRECTORY }}/publish"
-          zip -r ../app.zip .
-          cd ..
+          zip -r ../../../../app.zip .
+          cd -
           ls -la ./app.zip
 
       - name: Publish Artifacts
