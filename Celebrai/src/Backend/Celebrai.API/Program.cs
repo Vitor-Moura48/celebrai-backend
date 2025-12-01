@@ -10,6 +10,17 @@ const string AUTHENTICATION_TYPE = "Bearer";
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTudo", policy =>
+    {
+        policy
+            .AllowAnyOrigin()    
+            .AllowAnyHeader()    
+            .AllowAnyMethod();   
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -58,6 +69,8 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+app.UseCors("PermitirTudo");
 
 app.UseMiddleware<ExceptionMiddleware>();
 
