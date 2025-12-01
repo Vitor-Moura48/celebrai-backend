@@ -5,6 +5,7 @@ using Celebrai.Application.UseCases.Fornecedor.Update;
 using Celebrai.Application.UseCases.Fornecedor.Profile;
 using Celebrai.Application.UseCases.FornecedorPedido.Register;
 using Celebrai.Application.UseCases.PedidoProduto.Register;
+using Celebrai.Application.UseCases.PedidoKit.Register;
 using Celebrai.Application.UseCases.Login.DoLogin;
 using Celebrai.Application.UseCases.Produto.GetById;
 using Celebrai.Application.UseCases.Produto.GetList;
@@ -64,6 +65,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetListPedidoUseCase, GetListPedidoUseCase>();
         services.AddScoped<IRegisterFornecedorPedidoUseCase, RegisterFornecedorPedidoUseCase>();
         services.AddScoped<IRegisterPedidoProdutoUseCase, RegisterPedidoProdutoUseCase>();
+        services.AddScoped<IRegisterPedidoKitUseCase, RegisterPedidoKitUseCase>();
         services.AddScoped<IRegisterKitUseCase, RegisterKitUseCase>();
         services.AddScoped<IGetListKitUseCase, GetListKitUseCase>();
         services.AddScoped<IGetKitByIdUseCase, GetKitByIdUseCase>();

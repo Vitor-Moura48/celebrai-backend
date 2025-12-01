@@ -3,6 +3,7 @@ using Celebrai.Domain.Repositories.Disponibilidade;
 using Celebrai.Domain.Repositories.Fornecedor;
 using Celebrai.Domain.Repositories.FornecedorPedido;
 using Celebrai.Domain.Repositories.PedidoProduto;
+using Celebrai.Domain.Repositories.PedidoKit;
 using Celebrai.Domain.Repositories.Kit;
 using Celebrai.Domain.Repositories.Produto;
 using Celebrai.Domain.Repositories.SubCategoria;
@@ -74,7 +75,10 @@ public static class DependencyInjectionExtension
         services.AddScoped<IPedidoUpdateOnlyRepository, PedidoRepository>();
         services.AddScoped<IPedidoWriteOnlyRepository, PedidoRepository>();
         services.AddScoped<IFornecedorPedidoWriteOnlyRepository, FornecedorPedidoRepository>();
+        services.AddScoped<IPedidoProdutoReadOnlyRepository, PedidoProdutoRepository>();
         services.AddScoped<IPedidoProdutoWriteOnlyRepository, PedidoProdutoRepository>();
+        services.AddScoped<IPedidoKitReadOnlyRepository, PedidoKitRepository>();
+        services.AddScoped<IPedidoKitWriteOnlyRepository, PedidoKitRepository>();
         services.AddScoped<IKitReadOnlyRepository, KitRepository>();
         services.AddScoped<IKitWriteOnlyRepository, KitRepository>();
     }

@@ -8,7 +8,7 @@ public class PedidoKit
     public decimal Preco { get; set; }
     public string? Avaliacao { get; set; }
     public int? Nota { get; set; }
-    public DateOnly Data { get; set; }
+    public DateOnly Data { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
 
     public Pedido Pedido { get; set; } = default!;
     public Kit Kit { get; set; } = default!;

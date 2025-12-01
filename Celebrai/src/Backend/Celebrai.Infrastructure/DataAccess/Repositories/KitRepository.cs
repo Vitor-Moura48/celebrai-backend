@@ -45,4 +45,8 @@ public class KitRepository : IKitWriteOnlyRepository, IKitReadOnlyRepository
             .ThenInclude(produto => produto.SubCategoria)
             .ToListAsync();
     }
+
+    public async Task<bool> ExistKitWithIdentifier(int idKit)
+        => await _context.Kit.AnyAsync(kit => kit.IdKit.Equals(idKit));
 }
+
