@@ -55,7 +55,7 @@ jobs:
         env:
           AZURE_SQL_CONN: ${{ secrets.CELEBRAI_SQL_CONN }}
         run: |
-          # instala a tool do FluentMigrator
+          # instala/atualiza a tool do FluentMigrator
           dotnet tool install --global FluentMigrator.DotNet.Cli || dotnet tool update --global FluentMigrator.DotNet.Cli
           export PATH="$HOME/.dotnet/tools:$PATH"
 
@@ -73,8 +73,12 @@ jobs:
           fi
 
           # executa o migrate apontando para a connection string segura
-          dotnet fm migrate -a "$DLL_PATH" -c "$AZURE_SQL_CONN"
-      
+          dotnet fm migrate \
+            --assembly "$DLL_PATH" \
+            --connection "$AZURE_SQL_CONN" \
+            --processor sqlserver \
+            --task migrate
+
       - name: Zip published output
         run: |
           cd Celebrai/src/Backend/Celebrai.API
