@@ -55,14 +55,14 @@ jobs:
           dotnet tool install --global FluentMigrator.DotNet.Cli || dotnet tool update --global FluentMigrator.DotNet.Cli
           export PATH="$HOME/.dotnet/tools:$PATH"
 
-          dotnet publish "Celebrai/src/Backend/Celebrai.Infrastructure" -c Release
+          dotnet publish "${{ env.MIGRATIONS_PROJECT }}" -c Release
 
-          DLL_PATH="Celebrai/src/Backend/Celebrai.Infrastructure/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
+          DLL_PATH="${{ env.MIGRATIONS_PROJECT }}/bin/Release/net9.0/publish/Celebrai.Infrastructure.dll"
 
           echo "Usando assembly: $DLL_PATH"
           if [ ! -f "$DLL_PATH" ]; then
             echo "ERRO: assembly de migrations não encontrado em $DLL_PATH"
-            ls -la "Celebrai/src/Backend/Celebrai.Infrastructure/bin/Release"
+            ls -la "${{ env.MIGRATIONS_PROJECT }}/bin/Release"
             exit 1
           fi
 
@@ -74,15 +74,15 @@ jobs:
       - name: Zip published output
         run: |
           cd "${{ env.WORKING_DIRECTORY }}/publish"
-          zip -r ../../../../app.zip .
+          zip -r "${{ github.workspace }}/app.zip" .
           cd -
-          ls -la ./app.zip
+          ls -la "${{ github.workspace }}/app.zip"
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: webapp
-          path: ${{ env.WORKING_DIRECTORY }}/app.zip
+          path: "${{ github.workspace }}/app.zip"
 
   deploy:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: webapp
-          path: .
+          path: "${{ github.workspace }}"
 
       - name: Azure Login (Service Principal)
         uses: azure/login@v2
@@ -103,4 +103,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ./app.zip
+          package: "${{ github.workspace }}/app.zip"
