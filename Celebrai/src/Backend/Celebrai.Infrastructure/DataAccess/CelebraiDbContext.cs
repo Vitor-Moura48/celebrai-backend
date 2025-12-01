@@ -26,6 +26,7 @@ public class CelebraiDbContext : DbContext
     public DbSet<Cartao> Cartao { get; set; }
     public DbSet<Disponibilidade> Disponibilidade { get; set; } 
     public DbSet<FornecedorPedido> FornecedorPedido { get; set; } 
+    public DbSet<PedidoKit> PedidoKit { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
